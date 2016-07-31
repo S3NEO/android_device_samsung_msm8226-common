@@ -74,6 +74,9 @@ EXTENDED_FONT_FOOTPRINT := true
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
 
+# LineageHW
+BOARD_HARDWARE_CLASS += device/samsung/msm8226-common/lineagehw
+
 # Memory
 MALLOC_IMPL := dlmalloc
 
