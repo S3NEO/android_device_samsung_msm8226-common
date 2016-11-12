@@ -89,6 +89,9 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
     libbt-vendor    
 
+# Boot animation
+TARGET_BOOTANIMATION_HALF_RES := true
+
 # Camera
 PRODUCT_PACKAGES += \
     camera.msm8226 \
