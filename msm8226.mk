@@ -60,7 +60,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     av.offload.enable=true    
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196608
+    ro.opengles.version=196608 \
+    debug.hwui.use_buffer_age=false
     
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true    
