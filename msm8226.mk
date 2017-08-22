@@ -117,12 +117,12 @@ TARGET_BOOTANIMATION_HALF_RES := true
 
 # Camera
 PRODUCT_PACKAGES += \
-    camera.msm8226 \
+    android.hardware.camera.provider@2.4-impl-legacy \
+    camera.device@1.0-impl-legacy \
     libboringssl-compat \
-    libstlport \
+    camera.msm8226 \
     libxml2 \
     Snap
-
 
 # Charger
 PRODUCT_PACKAGES += \
