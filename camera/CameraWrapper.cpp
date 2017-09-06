@@ -39,6 +39,12 @@
 
 using namespace android;
 
+const char KEY_SUPPORTED_ISO_MODES[] = "iso-values";
+const char KEY_SAMSUNG_CAMERA_MODE[] = "cam_mode";
+const char KEY_ISO_MODE[] = "iso";
+const char KEY_ZSL[] = "zsl";
+const char KEY_CAMERA_MODE[] = "camera-mode";
+
 static Mutex gCameraWrapperLock;
 static camera_module_t* gVendorModule = 0;
 
@@ -126,7 +132,7 @@ static char* camera_fixup_getparams(int id, const char* settings) {
     params.dump();
 #endif
 
-    params.set(CameraParameters::KEY_SUPPORTED_ISO_MODES, iso_values[id]);
+    params.set(KEY_SUPPORTED_ISO_MODES, iso_values[id]);
     params.set(CameraParameters::KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO, "1280x720");
     params.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
                "auto,asd,action,portrait,landscape,night,night-portrait,theatre,beach,snow,sunset,"
@@ -149,7 +155,7 @@ static char* camera_fixup_setparams(struct camera_device* device, const char* se
     int id = CAMERA_ID(device);
     CameraParameters params;
     params.unflatten(String8(settings));
-    const char* camMode = params.get(CameraParameters::KEY_SAMSUNG_CAMERA_MODE);
+    const char* camMode = params.get(KEY_SAMSUNG_CAMERA_MODE);
 
     const char* recordingHint = params.get(CameraParameters::KEY_RECORDING_HINT);
     bool isVideo = false;
@@ -161,24 +167,24 @@ static char* camera_fixup_setparams(struct camera_device* device, const char* se
 #endif
 
     if (params.get("iso")) {
-        const char* isoMode = params.get(CameraParameters::KEY_ISO_MODE);
+        const char* isoMode = params.get(KEY_ISO_MODE);
         if (strcmp(isoMode, "ISO50") == 0)
-            params.set(CameraParameters::KEY_ISO_MODE, "50");
+            params.set(KEY_ISO_MODE, "50");
         else if (strcmp(isoMode, "ISO100") == 0)
-            params.set(CameraParameters::KEY_ISO_MODE, "100");
+            params.set(KEY_ISO_MODE, "100");
         else if (strcmp(isoMode, "ISO200") == 0)
-            params.set(CameraParameters::KEY_ISO_MODE, "200");
+            params.set(KEY_ISO_MODE, "200");
         else if (strcmp(isoMode, "ISO400") == 0)
-            params.set(CameraParameters::KEY_ISO_MODE, "400");
+            params.set(KEY_ISO_MODE, "400");
         else if (strcmp(isoMode, "ISO800") == 0)
-            params.set(CameraParameters::KEY_ISO_MODE, "800");
+            params.set(KEY_ISO_MODE, "800");
         else if (strcmp(isoMode, "ISO1600") == 0)
-            params.set(CameraParameters::KEY_ISO_MODE, "1600");
+            params.set(KEY_ISO_MODE, "1600");
     }
 
     if (id != 1) {
-        params.set(CameraParameters::KEY_ZSL, isVideo ? "off" : "on");
-        params.set(CameraParameters::KEY_CAMERA_MODE, isVideo ? "0" : "1");
+        params.set(KEY_ZSL, isVideo ? "off" : "on");
+        params.set(KEY_CAMERA_MODE, isVideo ? "0" : "1");
     }
 
 #if !LOG_NDEBUG
