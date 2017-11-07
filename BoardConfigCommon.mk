@@ -30,6 +30,9 @@ BOARD_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 AUDIO_FEATURE_ENABLED_LOW_LATENCY_CAPTURE := true
 BOARD_USES_ALSA_AUDIO := true
 
+# Binder API version
+TARGET_USES_64_BIT_BINDER := true
+
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_QCOM := true
