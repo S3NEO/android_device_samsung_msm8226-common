@@ -124,7 +124,7 @@ TARGET_INIT_VENDOR_LIB := libinit_msm
 BOARD_HARDWARE_CLASS += device/samsung/msm8226-common/lineagehw
 
 # Memory
-MALLOC_IMPL := dlmalloc
+MALLOC_SVELTE := true
 
 # Optimize
 PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
