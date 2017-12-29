@@ -52,6 +52,21 @@ PRODUCT_PACKAGES += \
     init.qcom.usb.rc \
     init.recovery.qcom.rc \
     ueventd.qcom.rc
+    
+# System properties
+PRODUCT_PROPERTY_OVERRIDES += \
+    audio.offload.buffer.size.kb=32 \
+    audio.offload.gapless.enabled=false \
+    av.offload.enable=true    
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.opengles.version=196608
+    
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.timed.enable=true    
+    
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vendor.extension_library=/vendor/lib/libqc-opt.so        
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -68,6 +83,11 @@ PRODUCT_PACKAGES += \
     libqcomvisualizer \
     libqcomvoiceprocessing \
     tinymix
+    
+# Bluetooth
+PRODUCT_PACKAGES += \
+    android.hardware.bluetooth@1.0-impl \
+    libbt-vendor    
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -96,19 +116,14 @@ PRODUCT_PACKAGES += \
     hwcomposer.msm8226 \
     memtrack.msm8226
 
-# Ebtables
+# DRM
 PRODUCT_PACKAGES += \
-    ebtables \
-    ethertypes \
-    libebtc
-
-# FM
-PRODUCT_PACKAGES += \
-    FMRadio \
-    libfmjni
+    android.hardware.drm@1.0-impl \
+    android.hardware.drm@1.0-service
 
 # GPS
 PRODUCT_PACKAGES += \
+    android.hardware.gnss@1.0-impl \
     gps.msm8226
 
 PRODUCT_COPY_FILES += \
@@ -122,6 +137,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/keylayout/Button_Jack.kl:system/usr/keylayout/Button_Jack.kl \
     $(LOCAL_PATH)/keylayout/synaptics_rmi4_i2c.kl:system/usr/keylayout/synaptics_rmi4_i2c.kl
 
+# Keymaster
+PRODUCT_PACKAGES += \
+    android.hardware.keymaster@3.0-impl
+    
 # Keystore
 PRODUCT_PACKAGES += \
     keystore.msm8226
@@ -150,19 +169,27 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediacodec.policy:system/vendor/etc/seccomp_policy/mediacodec.policy \
     $(LOCAL_PATH)/seccomp/mediaextractor.policy:system/vendor/etc/seccomp_policy/mediaextractor.policy
 
+# Sensors
+PRODUCT_PACKAGES += \
+    android.hardware.sensors@1.0-impl
+
+# USB
+PRODUCT_PACKAGES += \
+    android.hardware.usb@1.0-service
+
 # Wifi
 PRODUCT_PACKAGES += \
     dhcpcd.conf \
     hostapd \
+    wificond \
     wpa_supplicant \
-    wpa_supplicant.conf
+    wpa_supplicant.conf \
+    libwpa_client \
+    android.hardware.wifi@1.0-service
 
 PRODUCT_PACKAGES += \
     libcurl \
-    libqsap_sdk \
-    libQWiFiSoftApCfg \
     libwcnss_qmi \
     wcnss_service
-
 # Inherit from qcom-common
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)

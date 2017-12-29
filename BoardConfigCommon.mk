@@ -20,8 +20,11 @@ VENDOR_PATH := device/samsung/msm8226-common
 TARGET_SPECIFIC_HEADER_PATH := $(VENDOR_PATH)/include
 
 # Architecture
+BOARD_USES_QCOM_HARDWARE := true
 TARGET_CPU_MEMCPY_BASE_OPT_DISABLE := true
 TARGET_CPU_VARIANT := krait
+BOARD_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
+BOARD_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
 # Audio
 AUDIO_FEATURE_ENABLED_LOW_LATENCY_CAPTURE := true
@@ -53,6 +56,8 @@ BOARD_RIL_CLASS := ../../../$(VENDOR_PATH)/ril
 # Display
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
+TARGET_USES_C2D_COMPOSITION := true
+TARGET_USES_ION := true
 
 # Shader cache config options
 # Maximum size of the  GLES Shaders that can be cached for reuse.
@@ -64,12 +69,12 @@ MAX_EGL_CACHE_KEY_SIZE := 12*1024
 # of the device.
 MAX_EGL_CACHE_SIZE := 2048*1024
 
-# FM
-AUDIO_FEATURE_ENABLED_FM := true
-TARGET_QCOM_NO_FM_FIRMWARE := true
-
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
+
+# HIDL
+DEVICE_MANIFEST_FILE := device/samsung/msm8226-common/manifest.xml
+DEVICE_MATRIX_FILE := device/samsung/msm8226-common/compatibility_matrix.xml
 
 # SELinux
 include device/samsung/msm8226-common/sepolicy/sepolicy.mk
@@ -95,6 +100,9 @@ USE_CLANG_PLATFORM_BUILD := true
 
 # Properties (reset them here, include more in device if needed)
 TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
+
+# Time services
+BOARD_USES_QC_TIME_SERVICES := true 
 
 # Basic dexpreopt
 ifeq ($(HOST_OS),linux)
