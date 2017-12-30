@@ -112,6 +112,11 @@ USE_CLANG_PLATFORM_BUILD := true
 # Properties (reset them here, include more in device if needed)
 TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
 
+# Power
+TARGET_HAS_LEGACY_POWER_STATS := true
+TARGET_HAS_NO_WIFI_STATS := true
+TARGET_USES_INTERACTION_BOOST := true
+
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true 
 

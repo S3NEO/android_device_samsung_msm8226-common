@@ -163,6 +163,10 @@ PRODUCT_PACKAGES += \
     libOmxVdec \
     libOmxVenc \
     libstagefrighthw
+    
+# Power HAL
+PRODUCT_PACKAGES += \
+    android.hardware.power@1.0-service-qti    
 
 # Seccomp
 PRODUCT_COPY_FILES += \
