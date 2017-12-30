@@ -53,6 +53,16 @@ BOARD_CHARGER_SHOW_PERCENTAGE := true
 # Custom RIL class
 BOARD_RIL_CLASS := ../../../$(VENDOR_PATH)/ril
 
+# Dexpreopt
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+    ifeq ($(WITH_DEXPREOPT),)
+      WITH_DEXPREOPT := true
+      WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
+    endif
+  endif
+endif
+
 # Display
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
@@ -103,16 +113,6 @@ TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
 
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true 
-
-# Basic dexpreopt
-ifeq ($(HOST_OS),linux)
-  ifneq ($(TARGET_BUILD_VARIANT),eng)
-    ifeq ($(WITH_DEXPREOPT),)
-      WITH_DEXPREOPT := true
-      WITH_DEXPREOPT_BOOT_IMG_ONLY := true
-    endif
-  endif
-endif
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true
