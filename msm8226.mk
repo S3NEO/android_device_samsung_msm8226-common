@@ -1,5 +1,5 @@
 # Copyright (C) 2014 The CyanogenMod Project
-# Copyright (C) 2017-2018 The LineageOS Project
+# Copyright (C) 2017-2019 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -197,5 +197,9 @@ PRODUCT_PACKAGES += \
     libcurl \
     libwcnss_qmi \
     wcnss_service
+
+# Get non-open-source specific aspects
+$(call inherit-product-if-exists, vendor/samsung/msm8226-common/msm8226-common-vendor.mk)
+    
 # Inherit from qcom-common
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
