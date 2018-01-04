@@ -223,6 +223,12 @@ on post-fs-data
     rmdir /data/user_de/0/com.android.providers.telephony/shared_prefs
 
     setprop vold.post_fs_data_done 1
+    
+    # Create perfd deamon related dirs
+    mkdir /data/misc/perfd 0755 root system
+    chmod 2755 /data/misc/perfd
+    mkdir /data/system/perfd 0770 root system
+    chmod 2770 /data/system/perfd    
 
 on early-boot
     # Set RLIMIT_MEMLOCK to 64MB
