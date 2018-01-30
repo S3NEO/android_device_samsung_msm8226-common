@@ -64,6 +64,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.hwui.use_buffer_age=false
     
 PRODUCT_PROPERTY_OVERRIDES += \
+    persist.graphics.vulkan.disable=true
+    
+PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true    
     
 PRODUCT_PROPERTY_OVERRIDES += \
