@@ -71,6 +71,9 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
 
+# SELinux
+include device/samsung/msm8226-common/sepolicy/sepolicy.mk
+
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
 
@@ -102,10 +105,6 @@ ifeq ($(HOST_OS),linux)
     endif
   endif
 endif
-
-# SELinux
--include device/qcom/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += $(VENDOR_PATH)/sepolicy
 
 # Wifi
 BOARD_HAS_QCOM_WLAN              := true
