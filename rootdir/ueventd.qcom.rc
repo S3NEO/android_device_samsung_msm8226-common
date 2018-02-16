@@ -180,6 +180,7 @@
 /sys/devices/virtual/input/input*                   pollrate_ms    0660    input    system
 
 # WLAN
+/dev/rfkill               0600   wifi       wifi
 /dev/wcnss_wlan           0660   system     system
 /dev/wcnss_ctrl           0660   system     system
 
