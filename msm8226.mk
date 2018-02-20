@@ -158,6 +158,14 @@ PRODUCT_PACKAGES += \
     wpa_supplicant \
     wpa_supplicant.conf
 
+# Torch
+PRODUCT_PACKAGES += \
+    Torch
+
+# QC Perf
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.vendor.extension_library=/system/lib/libqc-opt.so
+
 PRODUCT_PACKAGES += \
     libcurl \
     libqsap_sdk \
