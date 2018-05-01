@@ -7,11 +7,9 @@ LOCAL_SHARED_LIBRARIES := libstagefright_foundation liblog libmedia libcutils
 LOCAL_MODULE := libwvm_shim
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_SRC_FILES := imx75_shim
-LOCAL_MODULE := imx174_shim
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_SRC_FILES := imx175_shim
+LOCAL_MODULE := imx175_shim
 LOCAL_SHARED_LIBRARIES := liblog
-LOCAL_32_BIT_ONLY := true
+LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
