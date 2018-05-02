@@ -41,7 +41,8 @@ PRODUCT_PACKAGES += \
     tinymix
 
 PRODUCT_PACKAGES += \
-    libwvm_shim
+    libwvm_shim \
+    imx175_shim
 
 # Camera
 PRODUCT_PACKAGES += \
