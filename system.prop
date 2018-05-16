@@ -2,6 +2,7 @@
 dalvik.vm.dex2oat-swap=false
 
 # Audio
+persist.media.treble_omx=false
 media.aac_51_output_enabled=true
 mm.enable.smoothstreaming=true
 ro.qc.sdk.audio.fluencetype=none
@@ -38,6 +39,7 @@ debug.composition.type=c2d
 ro.opengles.version=196608
 ro.qualcomm.cabl=0
 ro.sf.lcd_density=320
+debug.hwui.use_buffer_age=false
 
 # GPS
 persist.gps.qc_nlp_in_use=1

@@ -33,6 +33,13 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     audio.usb.default
 
+# Also Audio
+PRODUCT_PACKAGES += \
+	android.hardware.audio@2.0-impl \
+	android.hardware.audio.effect@2.0-impl \
+	android.hardware.broadcastradio@1.0-impl \
+	android.hardware.soundtrigger@2.0-impl
+
 PRODUCT_PACKAGES += \
     libaudio-resampler \
     libqcompostprocbundle \
@@ -45,10 +52,11 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
+    android.hardware.camera.provider@2.4-impl \
+    camera.device@3.2-impl \
     camera.vendor.msm8226 \
     camera.msm8226 \
     libboringssl-compat \
-    libstlport \
     libxml2 \
     Snap
 
@@ -64,7 +72,12 @@ PRODUCT_PACKAGES += \
     copybit.msm8226 \
     gralloc.msm8226 \
     hwcomposer.msm8226 \
-    memtrack.msm8226
+    memtrack.msm8226 \
+    android.hardware.graphics.allocator@2.0-impl \
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.mapper@2.0-impl \
+    android.hardware.memtrack@1.0-impl
 
 # Ebtables
 PRODUCT_PACKAGES += \
@@ -108,6 +121,10 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
+# DRM
+PRODUCT_PACKAGES += \
+	android.hardware.drm@1.0-impl \
+
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
@@ -133,8 +150,36 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.software.midi.xml:system/etc/permissions/android.software.midi.xml
 
+# GPS HAL
+PRODUCT_PACKAGES += \
+	gps.msm8226 \
+	android.hardware.gnss@1.0-impl
+
+# Sensor HAL
+PRODUCT_PACKAGES += \
+    android.hardware.sensors@1.0-impl
+
+
+# Bluetooth
+PRODUCT_PACKAGES += \
+	libbt-vendor \
+	android.hardware.bluetooth@1.0-impl
+
+# Keymaster HAL
+PRODUCT_PACKAGES += \
+	android.hardware.keymaster@3.0-impl
+
+# Vibrator
+PRODUCT_PACKAGES += \
+	android.hardware.vibrator@1.0-impl
+
+# USB HAL
+PRODUCT_PACKAGES += \
+	android.hardware.usb@1.0-service
+
 # Power
 PRODUCT_PACKAGES += \
+    android.hardware.power@1.0-impl \
     power.msm8226
 
 # Radio
@@ -156,8 +201,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     dhcpcd.conf \
     hostapd \
+    wificond \
     wpa_supplicant \
-    wpa_supplicant.conf
+    wpa_supplicant.conf \
+    libwpa_client \
+    android.hardware.wifi@1.0-service
 
 # Torch
 PRODUCT_PACKAGES += \
@@ -169,8 +217,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PACKAGES += \
     libcurl \
-    libqsap_sdk \
-    libQWiFiSoftApCfg \
     libwcnss_qmi \
     wcnss_service
 
