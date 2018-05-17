@@ -53,7 +53,7 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
-    camera.device@3.2-impl \
+    camera.device@1.0-impl \
     camera.vendor.msm8226 \
     camera.msm8226 \
     libboringssl-compat \

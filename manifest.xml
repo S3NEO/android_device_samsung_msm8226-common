@@ -54,11 +54,11 @@
         </interface>
     </hal>
     <hal format="hidl">
-        <name>android.hardware.ir</name>
+        <name>android.hardware.sensors</name>
         <transport arch="32">passthrough</transport>
         <version>1.0</version>
         <interface>
-            <name>IConsumerIr</name>
+            <name>ISensors</name>
             <instance>default</instance>
         </interface>
     </hal>

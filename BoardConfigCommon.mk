@@ -23,6 +23,10 @@ TARGET_SPECIFIC_HEADER_PATH := $(VENDOR_PATH)/include
 # CMHW
 BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
 
+# Filesystem
+TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
+
+#ADB
 TARGET_USES_LEGACY_ADB_INTERFACE :=true
 
 #HIDL
