@@ -63,11 +63,11 @@ static int wrapper_sensors_module_close(struct hw_device_t* device) {
 	return ret;
 }
 
-WRAP_HAL(setDelay, int, (struct sensors_poll_device_t *dev, int handle, int64_t ns), (samsung_hw_dev, handle, ns))
+WRAP_HAL(setDelay, int, (struct sensors_poll_device_t *dev, int handle, int32_t ns), (samsung_hw_dev, handle, ns))
 WRAP_HAL(activate, int, (struct sensors_poll_device_t *dev, int handle, int enabled), (samsung_hw_dev, handle, enabled))
 WRAP_HAL(poll, int, (struct sensors_poll_device_t *dev, sensors_event_t* data, int count), (samsung_hw_dev, data, count))
 WRAP_HAL(flush, int, (struct sensors_poll_device_1_t *dev, int handle), (samsung_hw_dev, handle))
-WRAP_HAL(batch, int, (struct sensors_poll_device_1 *dev, int handle, int flags, int64_t ns, int64_t timeout), (samsung_hw_dev, handle, flags, ns, timeout))
+WRAP_HAL(batch, int, (struct sensors_poll_device_1 *dev, int handle, int flags, int32_t ns, int32_t timeout), (samsung_hw_dev, handle, flags, ns, timeout))
 
 static int sensors_module_open(const struct hw_module_t* module, const char* id, struct hw_device_t** device) {
 	int ret=0;
@@ -79,7 +79,7 @@ static int sensors_module_open(const struct hw_module_t* module, const char* id,
 		ret = -ENODEV;
 		goto fail;
 	}
-	
+
 	ret = check_vendor_module();
 
 	if (ret) {
@@ -89,7 +89,7 @@ static int sensors_module_open(const struct hw_module_t* module, const char* id,
 	}
 
 	ret = gVendorModule->common.methods->open((const hw_module_t*)gVendorModule, id, (hw_device_t**)&samsung_hw_dev);
-	
+
 	if (ret) {
 		ALOGE("%s couldn't open sensors module in %s. (%s)", __func__,
 				 SENSORS_HARDWARE_MODULE_ID, strerror(-ret));
@@ -119,7 +119,7 @@ static int sensors_module_open(const struct hw_module_t* module, const char* id,
 	dev->flush = wrapper_flush;
 
 	return ret;
-	
+
 	fail:
 	if (samsung_hw_dev) {
 		free(samsung_hw_dev);
