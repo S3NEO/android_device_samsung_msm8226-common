@@ -6,6 +6,8 @@ ro.carrier=wifi-only
 ro.radio.noril=1
 
 # Audio
+
+persist.media.treble_omx=false
 af.fast_track_multiplier=1
 audio_hal.period_size=192
 audio.offload.video=true
