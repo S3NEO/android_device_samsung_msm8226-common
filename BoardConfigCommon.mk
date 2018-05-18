@@ -20,6 +20,7 @@ VENDOR_PATH := device/samsung/msm8226-common
 include device/samsung/msm8226-common/board/*.mk
 
 TARGET_SPECIFIC_HEADER_PATH := $(VENDOR_PATH)/include
+
 # CMHW
 BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
 
@@ -33,9 +34,6 @@ TARGET_USES_LEGACY_ADB_INTERFACE :=true
 PRODUCT_COPY_FILES += \
     $(VENDOR_PATH)/manifest.xml:system/vendor/manifest.xml
 
-# Custom RIL class
-BOARD_RIL_CLASS := ../../../$(VENDOR_PATH)/ril
-
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
 
@@ -43,6 +41,5 @@ EXTENDED_FONT_FOOTPRINT := true
 TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
 
 # SELinux
--include device/qcom/sepolicy/sepolicy.mk
-BOARD_SEPOLICY_DIRS += $(VENDOR_PATH)/sepolicy
-
+include device/qcom/sepolicy/sepolicy.mk
+include device/qcom/sepolicy/legacy-sepolicy.mk

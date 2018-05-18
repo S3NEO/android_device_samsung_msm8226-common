@@ -1,12 +1,25 @@
 # Art
 dalvik.vm.dex2oat-swap=false
 
+# Radio Temp
+ro.carrier=wifi-only
+ro.radio.noril=1
+
 # Audio
-persist.media.treble_omx=false
-media.aac_51_output_enabled=true
-mm.enable.smoothstreaming=true
-ro.qc.sdk.audio.fluencetype=none
+af.fast_track_multiplier=1
+audio_hal.period_size=192
+audio.offload.video=true
+persist.audio.fluence.speaker=true
+persist.audio.fluence.voicecall=true
+persist.audio.fluence.voicerec=false
+ro.qc.sdk.audio.fluencetype=fluence
 use.voice.path.for.pcm.voip=false
+use.dedicated.device.for.voip=true
+audio.deep_buffer.media=true
+audio.offload.pcm.16bit.enable=true
+audio.offload.pcm.24bit.enable=true
+audio.offload.multiple.enabled=false
+audio.offload.buffer.size.kb=32
 
 # Bluetooth
 qcom.bluetooth.soc=smd
@@ -59,7 +72,6 @@ persist.data.qmi.adb_logmask=0
 persist.radio.add_power_save=1
 rild.libargs=-d /dev/smd0
 rild.libpath=/system/lib/libsec-ril.so
-ro.telephony.ril_class=SamsungMSM8226RIL
 ro.telephony.ril.config=simactivation
 ro.use_data_netmgrd=false
 
