@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The CyanogenMod Project
+ * Copyright (C) 2016 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,22 @@
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 
-#include <stdbool.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <stdlib.h>
 
 #include <utils/Log.h>
 
 #include "power.h"
 
+#define CPUFREQ_PATH "/sys/devices/system/cpu/cpu0/cpufreq/"
+#define INTERACTIVE_PATH "/sys/devices/system/cpu/cpufreq/interactive/"
+
 /* touchkeys */
 #define TK_POWER "/sys/class/input/input1/enabled"
 /* touchscreen */
 #define TS_POWER "/sys/class/input/input2/enabled"
-
-#define CPUFREQ_PATH "/sys/devices/system/cpu/cpu0/cpufreq/"
-#define INTERACTIVE_PATH "/sys/devices/system/cpu/cpufreq/interactive/"
 
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 static int boostpulse_fd = -1;
@@ -78,15 +74,6 @@ static int sysfs_write_int(char *path, int value)
     return sysfs_write_str(path, buf);
 }
 
-static bool check_governor(void)
-{
-    struct stat s;
-    int err = stat(INTERACTIVE_PATH, &s);
-    if (err != 0) return false;
-    if (S_ISDIR(s.st_mode)) return true;
-    return false;
-}
-
 static int is_profile_valid(int profile)
 {
     return profile >= 0 && profile < PROFILE_MAX;
@@ -123,23 +110,24 @@ static void power_set_interactive(__attribute__((unused)) struct power_module *m
 
     power_set_interactive_ext(on);
 
-    // break out early if governor is not interactive
-    if (!check_governor()) return;
-
     if (on) {
         sysfs_write_int(INTERACTIVE_PATH "hispeed_freq",
                         profiles[current_power_profile].hispeed_freq);
         sysfs_write_int(INTERACTIVE_PATH "go_hispeed_load",
                         profiles[current_power_profile].go_hispeed_load);
-        sysfs_write_str(INTERACTIVE_PATH "target_loads",
+        sysfs_write_int(INTERACTIVE_PATH "target_loads",
                         profiles[current_power_profile].target_loads);
+        sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
+                        profiles[current_power_profile].scaling_min_freq);
     } else {
         sysfs_write_int(INTERACTIVE_PATH "hispeed_freq",
                         profiles[current_power_profile].hispeed_freq_off);
         sysfs_write_int(INTERACTIVE_PATH "go_hispeed_load",
                         profiles[current_power_profile].go_hispeed_load_off);
-        sysfs_write_str(INTERACTIVE_PATH "target_loads",
+        sysfs_write_int(INTERACTIVE_PATH "target_loads",
                         profiles[current_power_profile].target_loads_off);
+        sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
+                        profiles[current_power_profile].scaling_min_freq_off);
     }
 }
 
@@ -149,9 +137,6 @@ static void set_power_profile(int profile)
         ALOGE("%s: unknown profile: %d", __func__, profile);
         return;
     }
-
-    // break out early if governor is not interactive
-    if (!check_governor()) return;
 
     if (profile == current_power_profile)
         return;
@@ -166,16 +151,18 @@ static void set_power_profile(int profile)
                     profiles[profile].go_hispeed_load);
     sysfs_write_int(INTERACTIVE_PATH "hispeed_freq",
                     profiles[profile].hispeed_freq);
-    sysfs_write_int(INTERACTIVE_PATH "io_is_busy",
-                    profiles[profile].io_is_busy);
     sysfs_write_int(INTERACTIVE_PATH "min_sample_time",
                     profiles[profile].min_sample_time);
-    sysfs_write_int(INTERACTIVE_PATH "sampling_down_factor",
-                    profiles[profile].sampling_down_factor);
-    sysfs_write_str(INTERACTIVE_PATH "target_loads",
+    sysfs_write_int(INTERACTIVE_PATH "timer_rate",
+                    profiles[profile].timer_rate);
+    sysfs_write_int(INTERACTIVE_PATH "above_hispeed_delay",
+                    profiles[profile].above_hispeed_delay);
+    sysfs_write_int(INTERACTIVE_PATH "target_loads",
                     profiles[profile].target_loads);
     sysfs_write_int(CPUFREQ_PATH "scaling_max_freq",
                     profiles[profile].scaling_max_freq);
+    sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
+                    profiles[profile].scaling_min_freq);
 
     current_power_profile = profile;
 }
@@ -195,9 +182,6 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
 
         if (!profiles[current_power_profile].boostpulse_duration)
             return;
-
-        // break out early if governor is not interactive
-        if (!check_governor()) return;
 
         if (boostpulse_open() >= 0) {
             snprintf(buf, sizeof(buf), "%d", 1);
@@ -226,10 +210,6 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
     }
 }
 
-static struct hw_module_methods_t power_module_methods = {
-    .open = NULL,
-};
-
 static int get_feature(__attribute__((unused)) struct power_module *module,
                        feature_t feature)
 {
@@ -239,6 +219,43 @@ static int get_feature(__attribute__((unused)) struct power_module *module,
     return -1;
 }
 
+static int power_open(const hw_module_t* module, const char* name,
+                    hw_device_t** device)
+{
+    ALOGD("%s: enter; name=%s", __FUNCTION__, name);
+
+    if (strcmp(name, POWER_HARDWARE_MODULE_ID)) {
+        return -EINVAL;
+    }
+
+    power_module_t *dev = (power_module_t *)calloc(1,
+            sizeof(power_module_t));
+
+    if (!dev) {
+        ALOGD("%s: failed to allocate memory", __FUNCTION__);
+        return -ENOMEM;
+    }
+
+    dev->common.tag = HARDWARE_MODULE_TAG;
+    dev->common.module_api_version = POWER_MODULE_API_VERSION_0_2;
+    dev->common.hal_api_version = HARDWARE_HAL_API_VERSION;
+
+    dev->init = power_init;
+    dev->powerHint = power_hint; // This is handled by framework
+    dev->setInteractive = power_set_interactive;
+    dev->getFeature = get_feature;
+
+    *device = (hw_device_t*)dev;
+
+    ALOGD("%s: exit", __FUNCTION__);
+
+    return 0;
+}
+
+static struct hw_module_methods_t power_module_methods = {
+    .open = power_open,
+};
+
 struct power_module HAL_MODULE_INFO_SYM = {
     .common = {
         .tag = HARDWARE_MODULE_TAG,
@@ -246,7 +263,7 @@ struct power_module HAL_MODULE_INFO_SYM = {
         .hal_api_version = HARDWARE_HAL_API_VERSION,
         .id = POWER_HARDWARE_MODULE_ID,
         .name = "msm8226 Power HAL",
-        .author = "Gabriele M",
+        .author = "The LineageOS Project",
         .methods = &power_module_methods,
     },
 
