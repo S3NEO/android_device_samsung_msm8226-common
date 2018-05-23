@@ -534,11 +534,6 @@ service irsc_util /system/bin/irsc_util "/etc/sec_config"
     user root
     oneshot
 
-service mpdecision /system/bin/mpdecision --avg_comp
-    class main
-    user root
-    group system
-
 service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
     user camera
