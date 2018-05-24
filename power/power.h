@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The CyanogenMod Project
+ * Copyright (C) 2016 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,12 +30,14 @@ typedef struct governor_settings {
     int go_hispeed_load_off;
     int hispeed_freq;
     int hispeed_freq_off;
-    int io_is_busy;
     int min_sample_time;
-    int sampling_down_factor;
-    char *target_loads;
-    char *target_loads_off;
+    int timer_rate;
+    int above_hispeed_delay;
+    int target_loads;
+    int target_loads_off;
     int scaling_max_freq;
+    int scaling_min_freq;
+    int scaling_min_freq_off;
 } power_profile;
 
 static power_profile profiles[PROFILE_MAX] = {
@@ -44,55 +46,65 @@ static power_profile profiles[PROFILE_MAX] = {
         .boostpulse_duration = 0,
         .go_hispeed_load = 90,
         .go_hispeed_load_off = 90,
-        .hispeed_freq = 787200,
-        .hispeed_freq_off = 787200,
-        .io_is_busy = 0,
+        .hispeed_freq = 800000,
+        .hispeed_freq_off = 800000,
         .min_sample_time = 60000,
-        .sampling_down_factor = 100000,
-        .target_loads = "95 1401600:99",
-        .target_loads_off = "95 1401600:99",
-        .scaling_max_freq = 787200,
+        .timer_rate = 20000,
+        .above_hispeed_delay = 20000,
+        .target_loads = 90,
+        .target_loads_off = 90,
+        .scaling_max_freq = 998400,
+        .scaling_min_freq = 400000,
+        .scaling_min_freq_off = 200000,
     },
     [PROFILE_BALANCED] = {
         .boost = 0,
         .boostpulse_duration = 60000,
-        .go_hispeed_load = 50,
+        .go_hispeed_load = 80,
         .go_hispeed_load_off = 90,
         .hispeed_freq = 998400,
-        .hispeed_freq_off = 787200,
-        .io_is_busy = 1,
+        .hispeed_freq_off = 800000,
         .min_sample_time = 60000,
-        .sampling_down_factor = 100000,
-        .target_loads = "80 998400:90 1401600:99",
-        .target_loads_off = "95 1401600:99",
-        .scaling_max_freq = 1401600,
+        .timer_rate = 20000,
+        .above_hispeed_delay = 20000,
+        .target_loads = 80,
+        .target_loads_off = 90,
+        .scaling_max_freq = 1209600,
+        .scaling_min_freq = 800000,
+        .scaling_min_freq_off = 200000,
     },
     [PROFILE_HIGH_PERFORMANCE] = {
         .boost = 1,
-        .boostpulse_duration = 0, /* prevent unnecessary write */
-        .go_hispeed_load = 50,
-        .go_hispeed_load_off = 50,
+        /* The CPU is already boosted, set duration to zero
+         * to avoid unneccessary writes to boostpulse */
+        .boostpulse_duration = 0,
+        .go_hispeed_load = 60,
+        .go_hispeed_load_off = 70,
         .hispeed_freq = 998400,
         .hispeed_freq_off = 998400,
-        .io_is_busy = 1,
         .min_sample_time = 60000,
-        .sampling_down_factor = 100000,
-        .target_loads = "80",
-        .target_loads_off = "80",
-        .scaling_max_freq = 1401600,
+        .timer_rate = 20000,
+        .above_hispeed_delay = 20000,
+        .target_loads = 60,
+        .target_loads_off = 70,
+        .scaling_max_freq = 1209600,
+        .scaling_min_freq = 800000,
+        .scaling_min_freq_off = 200000,
     },
     [PROFILE_BIAS_POWER_SAVE] = {
         .boost = 0,
-        .boostpulse_duration = 0,
+        .boostpulse_duration = 40000,
         .go_hispeed_load = 90,
         .go_hispeed_load_off = 90,
-        .hispeed_freq = 787200,
-        .hispeed_freq_off = 787200,
-        .io_is_busy = 0,
+        .hispeed_freq = 800000,
+        .hispeed_freq_off = 800000,
         .min_sample_time = 60000,
-        .sampling_down_factor = 100000,
-        .target_loads = "95 1401600:99",
-        .target_loads_off = "95 1401600:99",
-        .scaling_max_freq = 1401600,
+        .timer_rate = 20000,
+        .above_hispeed_delay = 20000,
+        .target_loads = 90,
+        .target_loads_off = 90,
+        .scaling_max_freq = 1209600,
+        .scaling_min_freq = 400000,
+        .scaling_min_freq_off = 200000,
     },
 };
