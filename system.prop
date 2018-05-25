@@ -51,7 +51,7 @@ ro.qc.sdk.izat.service_mask=0x0
 sys.io.scheduler=bfq
 
 # Perf
-ro.vendor.extension_library=/vendor/lib/libqc-opt.so
+ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Radio
 persist.data.netmgrd.qos.enable=false
