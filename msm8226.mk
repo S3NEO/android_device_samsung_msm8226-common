@@ -48,16 +48,15 @@ PRODUCT_PACKAGES += \
     tinymix
 
 PRODUCT_PACKAGES += \
-    libwvm_shim \
-    imx175_shim
+    libwvm_shim
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    camera.device@3.2-impl \
+    android.hardware.camera.provider@2.4-impl-legacy \
     camera.msm8226 \
     libboringssl-compat \
     libxml2 \
+    imx175_shim \
     Snap
 
 # CRDA
