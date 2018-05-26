@@ -25,6 +25,7 @@ BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
 
 TARGET_USES_LEGACY_ADB_INTERFACE :=true
 
+TARGET_LD_SHIM_LIBS += /system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so:/system/lib/libril.so|libril_shim.so:/system/vendor/lib/libwvm.so|libwvm_shim.so:/system/vendor/lib/libmmcamera_imx175.so|libimx175_shim.so
 #HIDL
 PRODUCT_COPY_FILES += \
     $(VENDOR_PATH)/manifest.xml:system/vendor/manifest.xml
