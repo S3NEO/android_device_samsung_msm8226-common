@@ -1,3 +1,3 @@
-ifeq ($(strip $(TARGET_USE_NEO_HAL)),true)
+ifeq ($(TARGET_ARCH),arm)
 include $(call all-subdir-makefiles)
 endif
