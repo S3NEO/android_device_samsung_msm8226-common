@@ -55,7 +55,11 @@ PRODUCT_PACKAGES += \
     camera.device@1.0-impl \
     libboringssl-compat \
     camera.msm8226 \
-    libxml2
+    libxml2 \
+    libshims_camera \
+    libshim_qcopt \
+    libshims_sensorlistener \
+    Camera2
 
 # CRDA
 PRODUCT_PACKAGES += \
