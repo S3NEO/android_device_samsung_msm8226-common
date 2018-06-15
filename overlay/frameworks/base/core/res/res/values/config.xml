@@ -66,6 +66,8 @@
         movement threshold where scrolling should begin. -->
     <dimen name="config_viewConfigurationTouchSlop">4dp</dimen>
     
+    <!-- Enable UI blur feature -->
+    <bool name="config_uiBlurEnabled">true</bool>
     
     <!-- Indicate whether to allow the device to suspend when the screen is off
          due to the proximity sensor.  This resource should only be set to true
