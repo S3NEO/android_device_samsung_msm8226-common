@@ -48,6 +48,10 @@ ro.qc.sdk.izat.service_mask=0x0
 # IO Scheduler
 sys.io.scheduler=bfq
 
+# Media
+media.stagefright.legacyencoder=true
+media.stagefright.less-secure=true
+
 # Perf
 ro.vendor.extension_library=/vendor/lib/libqc-opt.so
 
