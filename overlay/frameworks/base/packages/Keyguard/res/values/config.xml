@@ -17,12 +17,10 @@
 */
 -->
 
-<resources>
-
-    <!-- These resources are around just to allow their values to be customized -->
-    <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- These resources are around just to allow their values to be customized -->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Threshold in micro amperes below which a charger is rated as "slow" -->
     <integer name="config_chargingSlowlyThreshold">600000</integer>
 
-</resources> 
+</resources>
