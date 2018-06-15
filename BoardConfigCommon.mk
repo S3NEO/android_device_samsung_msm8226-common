@@ -30,6 +30,9 @@ BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
 # Custom RIL class
 BOARD_RIL_CLASS := ../../../$(VENDOR_PATH)/ril
 
+# QCOM Hardware
+BOARD_USES_QCOM_HARDWARE := true
+
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
 
