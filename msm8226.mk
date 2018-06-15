@@ -32,7 +32,7 @@ PRODUCT_PACKAGES += \
     audio.primary.msm8226 \
     audio.r_submix.default \
     audio.usb.default
-
+    
 PRODUCT_PACKAGES += \
     libaudio-resampler \
     libqcompostprocbundle \
@@ -40,6 +40,10 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing \
     tinymix
 
+# Audio configuration
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/audio_effects.conf:system/vendor/etc/audio_effects.conf  
+    
 PRODUCT_PACKAGES += \
     libwvm_shim \
     imx175_shim
