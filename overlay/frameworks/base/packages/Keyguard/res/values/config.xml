@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 /*
@@ -17,6 +16,8 @@
 ** limitations under the License.
 */
 -->
+
+<resources>
 
     <!-- These resources are around just to allow their values to be customized -->
     <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
