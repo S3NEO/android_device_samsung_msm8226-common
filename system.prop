@@ -40,6 +40,13 @@ ro.qualcomm.bt.hci_transport=smd
 
 # Camera
 camera2.portability.force_api=1
+persist.camera.feature.cac=1
+persist.camera.snapshot_raw=1
+persist.camera.dumping=1
+persist.camera.snap.format=0
+persist.camera.dumpimg=1
+persist.camera.dumpmetadata=1
+persist.camera.zsl_raw=1
 
 # Dalvik
 dalvik.vm.heapstartsize=8m
