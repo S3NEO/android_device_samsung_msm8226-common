@@ -57,8 +57,8 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    camera.device@1.0-impl \
+    android.hardware.camera.provider@2.4-impl-legacy \
+    camera.device@1.0-impl-legacy \
     libboringssl-compat \
     camera.msm8226 \
     libxml2 \
@@ -191,14 +191,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	android.hardware.usb@1.0-service
 
-# Power
+# Power HAL
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-impl \
-    power.msm8226
+    android.hardware.power@1.0-service-qti
 
 # Radio
 PRODUCT_PACKAGES += \
-    libril_shim
+    libsecnativefeature
 
 # Ramdisk
 PRODUCT_PACKAGES += \
@@ -210,6 +209,11 @@ PRODUCT_PACKAGES += \
     init.qcom.usb.rc \
     init.recovery.qcom.rc \
     ueventd.qcom.rc
+
+# Lights
+PRODUCT_PACKAGES += \
+    android.hardware.light@2.0-impl \
+    lights.MSM8226
 
 # Wifi
 PRODUCT_PACKAGES += \

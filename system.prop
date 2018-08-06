@@ -1,10 +1,6 @@
 # Art
 dalvik.vm.dex2oat-swap=false
 
-# Radio Temp
-ro.carrier=wifi-only
-ro.radio.noril=1
-
 # Audio
 
 persist.media.treble_omx=false
@@ -76,6 +72,17 @@ sys.io.scheduler=bfq
 ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Radio
+
+persist.rild.nitz_plmn=""
+persist.rild.nitz_long_ons_0=""
+persist.rild.nitz_long_ons_1=""
+persist.rild.nitz_long_ons_2=""
+persist.rild.nitz_long_ons_3=""
+persist.rild.nitz_short_ons_0=""
+persist.rild.nitz_short_ons_1=""
+persist.rild.nitz_short_ons_2=""
+persist.rild.nitz_short_ons_3=""
+
 persist.data.netmgrd.qos.enable=false
 persist.data.qmi.adb_logmask=0
 persist.radio.add_power_save=1
