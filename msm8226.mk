@@ -32,25 +32,24 @@ TARGET_SCREEN_WIDTH := 720
 
 # Audio
 PRODUCT_PACKAGES += \
-    audiod \
+    android.hardware.audio@2.0-impl \
+    android.hardware.audio.effect@2.0-impl \
+    audio_policy.msm8974 \
     audio.a2dp.default \
     audio.primary.msm8226 \
     audio.r_submix.default \
-    audio.usb.default
-
-# Also Audio
-PRODUCT_PACKAGES += \
-	android.hardware.audio@2.0-impl \
-	android.hardware.audio.effect@2.0-impl \
-	android.hardware.broadcastradio@1.0-impl \
-	android.hardware.soundtrigger@2.0-impl
-
-PRODUCT_PACKAGES += \
+    audio.usb.default \
     libaudio-resampler \
-    libqcompostprocbundle \
     libqcomvisualizer \
+    libqcompostprocbundle \
     libqcomvoiceprocessing \
     tinymix
+
+# System properties
+PRODUCT_PROPERTY_OVERRIDES += \
+    audio.offload.buffer.size.kb=32 \
+    audio.offload.gapless.enabled=false \
+    av.offload.enable=true
 
 PRODUCT_PACKAGES += \
     libwvm_shim \
@@ -59,11 +58,14 @@ PRODUCT_PACKAGES += \
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
-    camera.device@3.2-impl \
-    camera.msm8226 \
+    camera.device@1.0-impl \
     libboringssl-compat \
+    camera.msm8226 \
     libxml2 \
-    Snap
+    libshims_camera \
+    libshim_qcopt \
+    libshims_sensorlistener \
+    Camera2
 
 # CRDA
 PRODUCT_PACKAGES += \
@@ -80,7 +82,6 @@ PRODUCT_PACKAGES += \
     memtrack.msm8226 \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
-    android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.memtrack@1.0-impl
 
@@ -164,6 +165,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
     sensors.msm8226
+
+# Sensors
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/_hals.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/_hals.conf
 
 # Sensors
 PRODUCT_COPY_FILES += \

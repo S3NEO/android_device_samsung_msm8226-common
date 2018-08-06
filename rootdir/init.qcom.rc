@@ -30,7 +30,6 @@ import init.qcom.usb.rc
 import init.target.rc
 
 on early-init
-    export LD_SHIM_LIBS "/system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so:/system/lib/libril.so|libril_shim.so:/system/vendor/lib/libwvm.so|libwvm_shim.so:/system/vendor/lib/libmmcamera_imx175.so|libimx175_shim.so"
 
     mount debugfs debugfs /sys/kernel/debug
 
@@ -671,16 +670,3 @@ service dhcpcd_bnep3 /system/bin/dhcpcd -BKLG
 service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
     disabled
     oneshot
-
-# Dual-sim support
-on property:persist.radio.multisim.config=dsds
-    stop ril-daemon
-    start ril-daemon
-    start ril-daemon1
-
-service ril-daemon1 /vendor/bin/hw/rild -l /system/lib/libsec-ril-dsds.so -c 2
-    class main
-    user radio
-    disabled
-    group radio cache inet misc audio log system drmrpc sdcard_r sdcard_rw shell wakelock
-    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW

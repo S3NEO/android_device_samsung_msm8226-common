@@ -1,3 +1,0 @@
-allow init tmpfs:lnk_file create_file_perms;
-allow init debugfs:dir mounton;
-allow init wcnss_device:chr_file write;
