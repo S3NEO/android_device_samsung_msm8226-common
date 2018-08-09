@@ -12,4 +12,9 @@ LOCAL_MODULE := libimx175_shim
 LOCAL_SHARED_LIBRARIES := liblog
 LOCAL_MODULE_TAGS := optional
 
+LOCAL_SRC_FILES := sec-ril_shim.cpp
+LOCAL_MODULE := sec-ril_shim
+LOCAL_SHARED_LIBRARIES := liblog
+LOCAL_MODULE_TAGS := optional
+
 include $(BUILD_SHARED_LIBRARY)

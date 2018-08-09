@@ -535,7 +535,7 @@ checkAndDequeueRequestInfoIfAck(struct RequestInfo *pRI, bool isAck) {
             ret = 1;
             if (isAck) { // Async ack
                 if (pRI->wasAckSent == 1) {
-                    RLOGD("Ack was already sent for %s", requestToString(pRI->pCI->requestNumber));
+                    RLOGE("Ack was already sent for %s", requestToString(pRI->pCI->requestNumber));
                 } else {
                     pRI->wasAckSent = 1;
                 }
@@ -567,7 +567,7 @@ RIL_onRequestAck(RIL_Token t) {
     socket_id = pRI->socket_id;
 
 #if VDBG
-    RLOGD("Request Ack, %s", rilSocketIdToString(socket_id));
+    RLOGE("Request Ack, %s", rilSocketIdToString(socket_id));
 #endif
 
     appendPrintBuf("Ack [%04d]< %s", pRI->token, requestToString(pRI->pCI->requestNumber));
@@ -599,13 +599,13 @@ RIL_onRequestComplete(RIL_Token t, RIL_Errno e, void *response, size_t responsel
 
     socket_id = pRI->socket_id;
 #if VDBG
-    RLOGD("RequestComplete, %s", rilSocketIdToString(socket_id));
+    RLOGE("RequestComplete, %s", rilSocketIdToString(socket_id));
 #endif
 
     if (pRI->local > 0) {
         // Locally issued command...void only!
         // response does not go back up the command socket
-        RLOGD("C[locl]< %s", requestToString(pRI->pCI->requestNumber));
+        RLOGE("C[locl]< %s", requestToString(pRI->pCI->requestNumber));
 
         free(pRI);
         return;

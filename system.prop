@@ -73,6 +73,8 @@ ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 
 # Radio
 
+ro.debug_level=0x4948
+
 persist.rild.nitz_plmn=""
 persist.rild.nitz_long_ons_0=""
 persist.rild.nitz_long_ons_1=""

@@ -47,7 +47,7 @@ void RilSapSocket::sOnRequestComplete (RIL_Token t,
     RilSapSocket *sap_socket;
     SapSocketRequest *request = (SapSocketRequest*) t;
 
-    RLOGD("Socket id:%d", request->socketId);
+    RLOGE("Socket id:%d", request->socketId);
 
     sap_socket = getSocketById(request->socketId);
 
@@ -86,10 +86,10 @@ void RilSapSocket::sOnUnsolicitedResponse(int unsolResponse,
 
 void RilSapSocket::printList() {
     RilSapSocketList *current = head;
-    RLOGD("Printing socket list");
+    RLOGE("Printing socket list");
     while(NULL != current) {
-        RLOGD("SocketName:%s",current->socket->name);
-        RLOGD("Socket id:%d",current->socket->id);
+        RLOGE("SocketName:%s",current->socket->name);
+        RLOGE("Socket id:%d",current->socket->id);
         current = current->next;
     }
 }
@@ -98,7 +98,7 @@ RilSapSocket *RilSapSocket::getSocketById(RIL_SOCKET_ID socketId) {
     RilSapSocket *sap_socket;
     RilSapSocketList *current = head;
 
-    RLOGD("Entered getSocketById");
+    RLOGE("Entered getSocketById");
     printList();
 
     while(NULL != current) {
@@ -161,7 +161,7 @@ void RilSapSocket::addSocketToList(const char *socketName, RIL_SOCKET_ID socketi
         listItem->socket = socket;
         listItem->next = NULL;
 
-        RLOGD("Adding socket with id: %d", socket->id);
+        RLOGE("Adding socket with id: %d", socket->id);
 
         if(NULL == head) {
             head = listItem;
