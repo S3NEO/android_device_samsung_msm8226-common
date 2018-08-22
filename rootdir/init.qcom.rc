@@ -30,6 +30,7 @@ import init.qcom.usb.rc
 import init.target.rc
 
 on early-init
+    export LD_SHIM_LIBS "/system/lib/hw/camera.vendor.msm8226.so|libboringssl-compat.so:/system/vendor/lib/libqomx_jpegenc.so|libboringssl-compat.so:/system/lib/libcrypto.so|libboringssl-compat.so:/system/lib/libril.so|libril_shim.so:/system/vendor/lib/libwvm.so|libwvm_shim.so"
 
     mount debugfs debugfs /sys/kernel/debug
 
@@ -45,13 +46,9 @@ on early-init
 on init
 
     # Support legacy paths
-    symlink /sdcard /mnt/sdcard
     symlink /sdcard /storage/sdcard0
 
 on fs
-    wait /dev/block/platform/soc.0/${ro.boot.bootdevice}
-    symlink /dev/block/platform/soc.0/${ro.boot.bootdevice} /dev/block/bootdevice
-    
     mount_all fstab.qcom
 
     # Support Preload install apks
@@ -488,13 +485,6 @@ on boot
     write /proc/sys/net/core/rmem_max  8388608
     write /proc/sys/net/core/wmem_max  8388608
 
-    # Wifi firmware reload path
-    chmod 0660 /sys/module/wlan/parameters/fwpath
-    chown wifi wifi /sys/module/wlan/parameters/fwpath
-
-    # Mark wifi driver as unloaded - "ok" indicates loaded
-    setprop wlan.driver.status not_ok
-
 on charger
     wait /dev/block/platform/msm_sdcc.1/by-name/system
     mount ext4 /dev/block/platform/msm_sdcc.1/by-name/system /system ro barrier=1
@@ -514,7 +504,7 @@ service audiod /system/bin/audiod
 service charger /sbin/healthd -c
     class charger
     critical
-    seclabel u:r:charger:s0
+    seclabel u:r:healthd:s0
 
 service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
     class late_start
@@ -546,7 +536,7 @@ service irsc_util /system/bin/irsc_util "/etc/sec_config"
 service mpdecision /system/bin/mpdecision --avg_comp
     class main
     user root
-    oneshot
+    group system
 
 service qcamerasvr /system/bin/mm-qcamera-daemon
     class late_start
@@ -556,7 +546,7 @@ service qcamerasvr /system/bin/mm-qcamera-daemon
 service qmuxd /system/bin/qmuxd
     class main
     user radio
-    group radio audio bluetooth gps oem_2950 diag log
+    group radio audio bluetooth gps qcom_diag
 
 service qseecomd /system/bin/qseecomd
     class core
@@ -602,7 +592,7 @@ service wcnss-service /system/bin/wcnss_service
     oneshot
 
 # WPA
-service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
+service p2p_supplicant /system/bin/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
     -I/system/etc/wifi/p2p_supplicant_overlay.conf -N \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
@@ -618,55 +608,29 @@ service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
     disabled
     oneshot
 
-on property:init.svc.wpa_supplicant=stopped
-    stop dhcpcd
-
-service dhcpcd_wlan0 /system/bin/dhcpcd -ABKLG
-    class late_start
+service wpa_supplicant /system/bin/wpa_supplicant \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
+    #   we will start as root and wpa_supplicant will switch to user wifi
+    #   after setting up the capabilities required for WEXT
+    #   user wifi
+    #   group wifi inet keystore
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
     disabled
     oneshot
 
-service dhcpcd_p2p /system/bin/dhcpcd -ABKLG
-    class late_start
-    disabled
-    oneshot
+# Dual-sim support
+on property:persist.radio.multisim.config=dsds
+    stop ril-daemon
+    start ril-daemon
+    start ril-daemon1
 
-service iprenew_wlan0 /system/bin/dhcpcd -n
-    class late_start
+service ril-daemon1 /system/bin/rild -l /system/lib/libsec-ril-dsds.so -c 2
+    class main
+    socket rild2 stream 660 root radio
+    socket rild-debug2 stream 660 radio system
+    user root
     disabled
-    oneshot
-
-service iprenew_p2p /system/bin/dhcpcd -n
-    class late_start
-    disabled
-    oneshot
-
-service dhcpcd_bt-pan /system/bin/dhcpcd -BKLG
-    class late_start
-    disabled
-    oneshot
-
-service iprenew_bt-pan /system/bin/dhcpcd -n
-    class late_start
-    disabled
-    oneshot
-
-service dhcpcd_bnep0 /system/bin/dhcpcd -BKLG
-    disabled
-    oneshot
-
-service dhcpcd_bnep1 /system/bin/dhcpcd -BKLG
-    disabled
-    oneshot
-
-service dhcpcd_bnep2 /system/bin/dhcpcd -BKLG
-    disabled
-    oneshot
-
-service dhcpcd_bnep3 /system/bin/dhcpcd -BKLG
-    disabled
-    oneshot
-
-service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
-    disabled
-    oneshot
+    group radio cache inet misc audio log qcom_diag system drmrpc sdcard_r sdcard_rw shell
