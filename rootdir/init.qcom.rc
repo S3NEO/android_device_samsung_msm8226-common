@@ -555,6 +555,13 @@ service irsc_util /system/bin/irsc_util "/etc/sec_config"
     user root
     oneshot
 
+service ril-daemon0 /vendor/bin/hw/rild
+    class main
+    user radio
+    group root radio cache inet misc audio log readproc wakelock oem_2901 diag oem_2950
+    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
+    disabled
+
 service mpdecision /system/bin/mpdecision --avg_comp
     class main
     user root
@@ -591,6 +598,7 @@ on property:neo.netmgr=true
 on property:ro.boot.emmc=true
     start rfs_access
     start rmt_storage
+    start ril-daemon0
 
 # Limit to SoC reset (1) and independent SSR (3)
 on property:persist.sys.ssr.restart_level=1
