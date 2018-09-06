@@ -2,7 +2,6 @@
 dalvik.vm.dex2oat-swap=false
 
 # Audio
-
 persist.media.treble_omx=false
 af.fast_track_multiplier=1
 audio_hal.period_size=192
@@ -68,8 +67,8 @@ ro.qc.sdk.izat.service_mask=0x0
 # IO Scheduler
 sys.io.scheduler=bfq
 
-# Perf
-ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
+# NFC
+ro.nfc.port=I2C
 
 # Radio
 
@@ -85,13 +84,18 @@ persist.rild.nitz_short_ons_1=""
 persist.rild.nitz_short_ons_2=""
 persist.rild.nitz_short_ons_3=""
 
-persist.data.netmgrd.qos.enable=false
+# Perf
+ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
+
+persist.data.netmgrd.qos.enable=true
 persist.data.qmi.adb_logmask=0
 persist.radio.add_power_save=1
-rild.libargs=-d /dev/smd0
-rild.libpath=/system/lib/libsec-ril.so
-ro.telephony.ril.config=simactivation
-ro.use_data_netmgrd=false
+rild.libpath=/system/vendor/lib/libsec-ril.so
+ro.telephony.mms_data_profile=5
+ro.ril.telephony.qan_resp_strings=6
+
+# Ril sends only one RIL_UNSOL_CALL_RING, so set call_ring.multiple to false
+ro.telephony.call_ring.multiple=0
 
 # Subsystem
 persist.sys.ssr.enable_debug=0
@@ -100,9 +104,13 @@ persist.sys.ssr.enable_debug=0
 ro.qc.sdk.gestures.camera=false
 ro.qc.sdk.camera.facialproc=false
 ro.qc.sdk.sensors.gestures=true
+debug.sensors=1
 
 # Time
 persist.timed.enable=true
+
+# Vendor security patch level
+ro.lineage.build.vendor_security_patch=2017-08-01
 
 # Wi-Fi
 ro.disableWifiApFirmwareReload=true
