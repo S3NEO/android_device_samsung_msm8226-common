@@ -55,8 +55,7 @@ PRODUCT_PACKAGES += \
     libboringssl-compat \
     libstlport \
     libxml2 \
-    Snap \
-    Camera2
+    Snap
 
 # CRDA
 PRODUCT_PACKAGES += \
