@@ -74,16 +74,6 @@ ro.nfc.port=I2C
 
 ro.debug_level=0x4948
 
-persist.rild.nitz_plmn=""
-persist.rild.nitz_long_ons_0=""
-persist.rild.nitz_long_ons_1=""
-persist.rild.nitz_long_ons_2=""
-persist.rild.nitz_long_ons_3=""
-persist.rild.nitz_short_ons_0=""
-persist.rild.nitz_short_ons_1=""
-persist.rild.nitz_short_ons_2=""
-persist.rild.nitz_short_ons_3=""
-
 # Perf
 ro.vendor.extension_library=/vendor/lib/libqti-perfd-client.so
 

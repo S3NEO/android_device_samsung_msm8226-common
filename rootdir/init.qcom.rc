@@ -598,7 +598,7 @@ on property:neo.netmgr=true
 on property:ro.boot.emmc=true
     start rfs_access
     start rmt_storage
-    start ril-daemon0
+    write /sdcard/test 1
 
 # Limit to SoC reset (1) and independent SSR (3)
 on property:persist.sys.ssr.restart_level=1
