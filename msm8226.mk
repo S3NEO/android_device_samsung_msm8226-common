@@ -213,6 +213,10 @@ PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl.samsung8226 \
     android.hardware.sensors@1.0-service.samsung8226
 
+# Touch features
+PRODUCT_PACKAGES += \
+    vendor.lineage.touch@1.0-service.samsung
+
 # Trust HAL
 PRODUCT_PACKAGES += \
     vendor.lineage.trust@1.0-service
