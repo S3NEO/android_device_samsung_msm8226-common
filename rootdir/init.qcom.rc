@@ -211,6 +211,11 @@ on post-fs-data
     # Symlink to bugreport storage location
     symlink /data/data/com.android.shell/files/bugreports /data/bugreports
 
+    # Remove symlinks to avoid issues with migrate after nandroid restores
+    # Will be recreated at end of boot
+    rm /data/data/com.android.providers.telephony/databases
+    rm /data/data/com.android.providers.telephony/shared_prefs
+
     setprop vold.post_fs_data_done 1
 
 on early-boot
@@ -508,6 +513,14 @@ on boot
 
     # Mark wifi driver as unloaded - "ok" indicates loaded
     setprop wlan.driver.status not_ok
+
+
+on property:sys.boot_completed=1
+    # Symlink directories to access telephony.db and preferred-apn.xml required by libsec-ril
+    symlink /data/user_de/0/com.android.providers.telephony/databases /data/data/com.android.providers.telephony/databases
+    symlink /data/user_de/0/com.android.providers.telephony/shared_prefs /data/data/com.android.providers.telephony/shared_prefs
+    restorecon /data/data/com.android.providers.telephony/databases
+    restorecon /data/data/com.android.providers.telephony/shared_pref
 
 on charger
     wait /dev/block/platform/msm_sdcc.1/by-name/system

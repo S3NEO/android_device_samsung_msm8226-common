@@ -86,7 +86,7 @@ void SapImpl::checkReturnStatus(Return<void>& ret) {
 }
 
 Return<void> SapImpl::setCallback(const ::android::sp<ISapCallback>& sapCallbackParam) {
-    RLOGE("SapImpl::setCallback for slotId %d", slotId);
+    RLOGD("SapImpl::setCallback for slotId %d", slotId);
     sapCallback = sapCallbackParam;
     return Void();
 }
@@ -117,7 +117,7 @@ Return<void> SapImpl::addPayloadAndDispatchRequest(MsgHeader *msg, uint16_t reqL
 
     RilSapSocket *sapSocket = RilSapSocket::getSocketById(rilSocketId);
     if (sapSocket) {
-        RLOGE("SapImpl::addPayloadAndDispatchRequest: calling dispatchRequest");
+        RLOGD("SapImpl::addPayloadAndDispatchRequest: calling dispatchRequest");
         sapSocket->dispatchRequest(msg);
     } else {
         RLOGE("SapImpl::addPayloadAndDispatchRequest: sapSocket is null");
@@ -184,7 +184,7 @@ void SapImpl::sendFailedResponse(MsgId msgId, int32_t token, int numPointers, ..
 }
 
 Return<void> SapImpl::connectReq(int32_t token, int32_t maxMsgSize) {
-    RLOGE("SapImpl::connectReq");
+    RLOGD("SapImpl::connectReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_CONNECT, token);
     if (msg == NULL) {
         RLOGE("SapImpl::connectReq: Error allocating memory for msg");
@@ -212,7 +212,7 @@ Return<void> SapImpl::connectReq(int32_t token, int32_t maxMsgSize) {
     }
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::connectReq calling pb_encode");
+    RLOGD("SapImpl::connectReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_CONNECT_REQ_fields, &req)) {
         RLOGE("SapImpl::connectReq: Error encoding RIL_SIM_SAP_CONNECT_REQ");
         sendFailedResponse(MsgId_RIL_SIM_SAP_CONNECT, token, 2, buffer, msg);
@@ -225,7 +225,7 @@ Return<void> SapImpl::connectReq(int32_t token, int32_t maxMsgSize) {
 }
 
 Return<void> SapImpl::disconnectReq(int32_t token) {
-    RLOGE("SapImpl::disconnectReq");
+    RLOGD("SapImpl::disconnectReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_DISCONNECT, token);
     if (msg == NULL) {
         RLOGE("SapImpl::disconnectReq: Error allocating memory for msg");
@@ -253,7 +253,7 @@ Return<void> SapImpl::disconnectReq(int32_t token) {
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::disconnectReq calling pb_encode");
+    RLOGD("SapImpl::disconnectReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_DISCONNECT_REQ_fields, &req)) {
         RLOGE("SapImpl::disconnectReq: Error encoding RIL_SIM_SAP_DISCONNECT_REQ");
         sendFailedResponse(MsgId_RIL_SIM_SAP_DISCONNECT, token, 2, buffer, msg);
@@ -266,7 +266,7 @@ Return<void> SapImpl::disconnectReq(int32_t token) {
 }
 
 Return<void> SapImpl::apduReq(int32_t token, SapApduType type, const hidl_vec<uint8_t>& command) {
-    RLOGE("SapImpl::apduReq");
+    RLOGD("SapImpl::apduReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_APDU, token);
     if (msg == NULL) {
         RLOGE("SapImpl::apduReq: Error allocating memory for msg");
@@ -306,7 +306,7 @@ Return<void> SapImpl::apduReq(int32_t token, SapApduType type, const hidl_vec<ui
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::apduReq calling pb_encode");
+    RLOGD("SapImpl::apduReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_APDU_REQ_fields, &req)) {
         RLOGE("SapImpl::apduReq: Error encoding RIL_SIM_SAP_APDU_REQ");
         sendFailedResponse(MsgId_RIL_SIM_SAP_APDU, token, 3, req.command, buffer, msg);
@@ -319,7 +319,7 @@ Return<void> SapImpl::apduReq(int32_t token, SapApduType type, const hidl_vec<ui
 }
 
 Return<void> SapImpl::transferAtrReq(int32_t token) {
-    RLOGE("SapImpl::transferAtrReq");
+    RLOGD("SapImpl::transferAtrReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_TRANSFER_ATR, token);
     if (msg == NULL) {
         RLOGE("SapImpl::transferAtrReq: Error allocating memory for msg");
@@ -348,7 +348,7 @@ Return<void> SapImpl::transferAtrReq(int32_t token) {
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::transferAtrReq calling pb_encode");
+    RLOGD("SapImpl::transferAtrReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_TRANSFER_ATR_REQ_fields, &req)) {
         RLOGE("SapImpl::transferAtrReq: Error encoding RIL_SIM_SAP_TRANSFER_ATR_REQ");
         sendFailedResponse(MsgId_RIL_SIM_SAP_TRANSFER_ATR, token, 2, buffer, msg);
@@ -361,7 +361,7 @@ Return<void> SapImpl::transferAtrReq(int32_t token) {
 }
 
 Return<void> SapImpl::powerReq(int32_t token, bool state) {
-    RLOGE("SapImpl::powerReq");
+    RLOGD("SapImpl::powerReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_POWER, token);
     if (msg == NULL) {
         RLOGE("SapImpl::powerReq: Error allocating memory for msg");
@@ -390,7 +390,7 @@ Return<void> SapImpl::powerReq(int32_t token, bool state) {
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::powerReq calling pb_encode");
+    RLOGD("SapImpl::powerReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_POWER_REQ_fields, &req)) {
         RLOGE("SapImpl::powerReq: Error encoding RIL_SIM_SAP_POWER_REQ");
         sendFailedResponse(MsgId_RIL_SIM_SAP_POWER, token, 2, buffer, msg);
@@ -403,7 +403,7 @@ Return<void> SapImpl::powerReq(int32_t token, bool state) {
 }
 
 Return<void> SapImpl::resetSimReq(int32_t token) {
-    RLOGE("SapImpl::resetSimReq");
+    RLOGD("SapImpl::resetSimReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_RESET_SIM, token);
     if (msg == NULL) {
         RLOGE("SapImpl::resetSimReq: Error allocating memory for msg");
@@ -431,7 +431,7 @@ Return<void> SapImpl::resetSimReq(int32_t token) {
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::resetSimReq calling pb_encode");
+    RLOGD("SapImpl::resetSimReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_RESET_SIM_REQ_fields, &req)) {
         RLOGE("SapImpl::resetSimReq: Error encoding RIL_SIM_SAP_RESET_SIM_REQ");
         sendFailedResponse(MsgId_RIL_SIM_SAP_RESET_SIM, token, 2, buffer, msg);
@@ -444,7 +444,7 @@ Return<void> SapImpl::resetSimReq(int32_t token) {
 }
 
 Return<void> SapImpl::transferCardReaderStatusReq(int32_t token) {
-    RLOGE("SapImpl::transferCardReaderStatusReq");
+    RLOGD("SapImpl::transferCardReaderStatusReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_TRANSFER_CARD_READER_STATUS, token);
     if (msg == NULL) {
         RLOGE("SapImpl::transferCardReaderStatusReq: Error allocating memory for msg");
@@ -474,7 +474,7 @@ Return<void> SapImpl::transferCardReaderStatusReq(int32_t token) {
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::transferCardReaderStatusReq calling pb_encode");
+    RLOGD("SapImpl::transferCardReaderStatusReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_TRANSFER_CARD_READER_STATUS_REQ_fields, &req)) {
         RLOGE("SapImpl::transferCardReaderStatusReq: Error encoding "
                 "RIL_SIM_SAP_TRANSFER_CARD_READER_STATUS_REQ");
@@ -488,7 +488,7 @@ Return<void> SapImpl::transferCardReaderStatusReq(int32_t token) {
 }
 
 Return<void> SapImpl::setTransferProtocolReq(int32_t token, SapTransferProtocol transferProtocol) {
-    RLOGE("SapImpl::setTransferProtocolReq");
+    RLOGD("SapImpl::setTransferProtocolReq");
     MsgHeader *msg = createMsgHeader(MsgId_RIL_SIM_SAP_SET_TRANSFER_PROTOCOL, token);
     if (msg == NULL) {
         RLOGE("SapImpl::setTransferProtocolReq: Error allocating memory for msg");
@@ -518,7 +518,7 @@ Return<void> SapImpl::setTransferProtocolReq(int32_t token, SapTransferProtocol 
 
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, encodedSize);
 
-    RLOGE("SapImpl::setTransferProtocolReq calling pb_encode");
+    RLOGD("SapImpl::setTransferProtocolReq calling pb_encode");
     if (!pb_encode(&stream, RIL_SIM_SAP_SET_TRANSFER_PROTOCOL_REQ_fields, &req)) {
         RLOGE("SapImpl::setTransferProtocolReq: Error encoding "
                 "RIL_SIM_SAP_SET_TRANSFER_PROTOCOL_REQ");
@@ -662,7 +662,7 @@ void *sapDecodeMessage(MsgId msgId, MsgType msgType, uint8_t *payloadPtr, size_t
 sp<SapImpl> getSapImpl(RilSapSocket *sapSocket) {
     switch (sapSocket->getSocketId()) {
         case RIL_SOCKET_1:
-            RLOGE("getSapImpl: returning sapService[0]");
+            RLOGD("getSapImpl: returning sapService[0]");
             return sapService[0];
         #if (SIM_COUNT >= 2)
         case RIL_SOCKET_2:
@@ -783,14 +783,14 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
         return;
     }
 
-    RLOGE("processResponse: sapCallback != NULL; msgId = %d; msgType = %d",
+    RLOGD("processResponse: sapCallback != NULL; msgId = %d; msgType = %d",
             msgId, msgType);
 
     Return<void> retStatus;
     switch (msgId) {
         case MsgId_RIL_SIM_SAP_CONNECT: {
             RIL_SIM_SAP_CONNECT_RSP *connectRsp = (RIL_SIM_SAP_CONNECT_RSP *)messagePtr;
-            RLOGE("processResponse: calling sapCallback->connectResponse %d %d %d",
+            RLOGD("processResponse: calling sapCallback->connectResponse %d %d %d",
                     rsp->token,
                     connectRsp->response,
                     connectRsp->max_message_size);
@@ -802,12 +802,12 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
 
         case MsgId_RIL_SIM_SAP_DISCONNECT:
             if (msgType == MsgType_RESPONSE) {
-                RLOGE("processResponse: calling sapCallback->disconnectResponse %d", rsp->token);
+                RLOGD("processResponse: calling sapCallback->disconnectResponse %d", rsp->token);
                 retStatus = sapImpl->sapCallback->disconnectResponse(rsp->token);
             } else {
                 RIL_SIM_SAP_DISCONNECT_IND *disconnectInd =
                         (RIL_SIM_SAP_DISCONNECT_IND *)messagePtr;
-                RLOGE("processResponse: calling sapCallback->disconnectIndication %d %d",
+                RLOGD("processResponse: calling sapCallback->disconnectIndication %d %d",
                         rsp->token, disconnectInd->disconnectType);
                 retStatus = sapImpl->sapCallback->disconnectIndication(rsp->token,
                         (SapDisconnectType)disconnectInd->disconnectType);
@@ -817,7 +817,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
         case MsgId_RIL_SIM_SAP_APDU: {
             RIL_SIM_SAP_APDU_RSP *apduRsp = (RIL_SIM_SAP_APDU_RSP *)messagePtr;
             SapResultCode apduResponse = convertApduResponseProtoToHal(apduRsp->response);
-            RLOGE("processResponse: calling sapCallback->apduResponse %d %d",
+            RLOGD("processResponse: calling sapCallback->apduResponse %d %d",
                     rsp->token, apduResponse);
             hidl_vec<uint8_t> apduRspVec;
             if (apduRsp->apduResponse != NULL && apduRsp->apduResponse->size > 0) {
@@ -832,7 +832,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
                 (RIL_SIM_SAP_TRANSFER_ATR_RSP *)messagePtr;
             SapResultCode transferAtrResponse =
                 convertTransferAtrResponseProtoToHal(transferAtrRsp->response);
-            RLOGE("processResponse: calling sapCallback->transferAtrResponse %d %d",
+            RLOGD("processResponse: calling sapCallback->transferAtrResponse %d %d",
                     rsp->token, transferAtrResponse);
             hidl_vec<uint8_t> transferAtrRspVec;
             if (transferAtrRsp->atr != NULL && transferAtrRsp->atr->size > 0) {
@@ -847,7 +847,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
         case MsgId_RIL_SIM_SAP_POWER: {
             SapResultCode powerResponse = convertPowerResponseProtoToHal(
                     ((RIL_SIM_SAP_POWER_RSP *)messagePtr)->response);
-            RLOGE("processResponse: calling sapCallback->powerResponse %d %d",
+            RLOGD("processResponse: calling sapCallback->powerResponse %d %d",
                     rsp->token, powerResponse);
             retStatus = sapImpl->sapCallback->powerResponse(rsp->token, powerResponse);
             break;
@@ -856,7 +856,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
         case MsgId_RIL_SIM_SAP_RESET_SIM: {
             SapResultCode resetSimResponse = convertResetSimResponseProtoToHal(
                     ((RIL_SIM_SAP_RESET_SIM_RSP *)messagePtr)->response);
-            RLOGE("processResponse: calling sapCallback->resetSimResponse %d %d",
+            RLOGD("processResponse: calling sapCallback->resetSimResponse %d %d",
                     rsp->token, resetSimResponse);
             retStatus = sapImpl->sapCallback->resetSimResponse(rsp->token, resetSimResponse);
             break;
@@ -864,7 +864,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
 
         case MsgId_RIL_SIM_SAP_STATUS: {
             RIL_SIM_SAP_STATUS_IND *statusInd = (RIL_SIM_SAP_STATUS_IND *)messagePtr;
-            RLOGE("processResponse: calling sapCallback->statusIndication %d %d",
+            RLOGD("processResponse: calling sapCallback->statusIndication %d %d",
                     rsp->token, statusInd->statusChange);
             retStatus = sapImpl->sapCallback->statusIndication(rsp->token,
                     (SapStatus)statusInd->statusChange);
@@ -877,7 +877,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
             SapResultCode transferCardReaderStatusResponse =
                     convertTransferCardReaderStatusResponseProtoToHal(
                     transferStatusRsp->response);
-            RLOGE("processResponse: calling sapCallback->transferCardReaderStatusResponse %d %d %d",
+            RLOGD("processResponse: calling sapCallback->transferCardReaderStatusResponse %d %d %d",
                     rsp->token,
                     transferCardReaderStatusResponse,
                     transferStatusRsp->CardReaderStatus);
@@ -888,7 +888,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
         }
 
         case MsgId_RIL_SIM_SAP_ERROR_RESP: {
-            RLOGE("processResponse: calling sapCallback->errorResponse %d", rsp->token);
+            RLOGD("processResponse: calling sapCallback->errorResponse %d", rsp->token);
             retStatus = sapImpl->sapCallback->errorResponse(rsp->token);
             break;
         }
@@ -901,7 +901,7 @@ void processResponse(MsgHeader *rsp, RilSapSocket *sapSocket, MsgType msgType) {
             } else {
                 setTransferProtocolResponse = SapResultCode::NOT_SUPPORTED;
             }
-            RLOGE("processResponse: calling sapCallback->transferProtocolResponse %d %d",
+            RLOGD("processResponse: calling sapCallback->transferProtocolResponse %d %d",
                     rsp->token, setTransferProtocolResponse);
             retStatus = sapImpl->sapCallback->transferProtocolResponse(rsp->token,
                     setTransferProtocolResponse);
@@ -958,8 +958,8 @@ void sap::registerService(RIL_RadioFunctions *callbacks) {
         sapService[i] = new SapImpl;
         sapService[i]->slotId = i;
         sapService[i]->rilSocketId = socketIds[i];
-        RLOGE("registerService: starting ISap %s for slotId %d", serviceNames[i], i);
+        RLOGD("registerService: starting ISap %s for slotId %d", serviceNames[i], i);
         android::status_t status = sapService[i]->registerAsService(serviceNames[i]);
-        RLOGE("registerService: started ISap %s status %d", serviceNames[i], status);
+        RLOGD("registerService: started ISap %s status %d", serviceNames[i], status);
     }
 }

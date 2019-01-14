@@ -33,7 +33,7 @@ namespace android {
 #define RESPONSE_UNSOLICITED_ACK_EXP 4
 
 // Enable verbose logging
-#define VDBG 1
+#define VDBG 0
 
 #define MIN(a,b) ((a)<(b) ? (a) : (b))
 
