@@ -58,6 +58,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PACKAGES += \
     imx175_shim
 
+# Security
+PRODUCT_PACKAGES += \
+    android.hardware.weaver@1.0
+
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl-legacy \
@@ -205,7 +209,8 @@ PRODUCT_PACKAGES += \
 
 # Ramdisk
 PRODUCT_PACKAGES += \
-    init.qcom.bt.sh
+    init.qcom.bt.sh \
+    init.ril.sh
 
 PRODUCT_PACKAGES += \
     init.qcom.power.rc \
