@@ -239,10 +239,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Torch
 
-# QC Perf
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.extension_library=/system/lib/libqc-opt.so
-
 PRODUCT_PACKAGES += \
     libcurl \
     libwcnss_qmi \

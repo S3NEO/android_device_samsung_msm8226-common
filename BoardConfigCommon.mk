@@ -37,7 +37,7 @@ TARGET_USES_LEGACY_ADB_INTERFACE :=true
 
 #HIDL
 PRODUCT_COPY_FILES += \
-    $(VENDOR_PATH)/manifest.xml:system/vendor/manifest.xml
+    $(VENDOR_PATH)/manifest.xml:$(TARGET_COPY_OUT_VENDOR)/manifest.xml
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
