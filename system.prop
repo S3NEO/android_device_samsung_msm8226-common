@@ -53,6 +53,9 @@ ro.qualcomm.cabl=0
 ro.sf.lcd_density=320
 debug.hwui.use_buffer_age=false
 
+# Android GO
+ro.config.low_ram=true
+
 # GPS
 persist.gps.qc_nlp_in_use=1
 ro.gps.agps_provider=1

@@ -56,7 +56,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     av.offload.enable=true
 
 PRODUCT_PACKAGES += \
-    imx175_shim
+    libimx175_shim
 
 # Security
 PRODUCT_PACKAGES += \
