@@ -36,8 +36,10 @@ TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
 TARGET_USES_LEGACY_ADB_INTERFACE :=true
 
 #HIDL
-PRODUCT_COPY_FILES += \
-    $(VENDOR_PATH)/manifest.xml:$(TARGET_COPY_OUT_VENDOR)/manifest.xml
+DEVICE_MANIFEST_FILE := $(VENDOR_PATH)/manifest.xml
+DEVICE_MATRIX_FILE := $(VENDOR_PATH)/compatibility_matrix.xml
+
+TARGET_POWERHAL_VARIANT := qcom
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
@@ -47,9 +49,8 @@ AUDIO_FEATURE_ENABLED_FM := true
 TARGET_QCOM_NO_FM_FIRMWARE := true
 BOARD_HAVE_QCOM_FM := true
 
-# Properties (reset them here, include more in device if needed)
-TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
-
+# Properites
+BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
-include device/qcom/sepolicy/legacy-sepolicy.mk

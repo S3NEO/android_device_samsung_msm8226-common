@@ -563,12 +563,12 @@ on charger
     class_start charger
 
 # Services
-service adsprpcd /system/bin/adsprpcd
+service adsprpcd /vendor/bin/adsprpcd
     class main
     user media
     group media
 
-service audiod /system/bin/audiod
+service audiod /vendor/bin/audiod
     class late_start
     user system
     group system
@@ -578,7 +578,7 @@ service charger /sbin/healthd -c
     critical
     seclabel u:r:charger:s0
 
-service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
+service ds_fmc_appd /vendor/bin/ds_fmc_appd -p "rmnet0" -D
     class late_start
     user root
     group radio wifi inet
@@ -588,9 +588,9 @@ service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
 on property:persist.data.ds_fmc_app.mode=1
     start ds_fmc_appd
 
-service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
+service hciattach /system/bin/sh /init.qcom.bt.sh
     class late_start
-    user bluetooth
+    user bluetooth root
     group bluetooth net_bt_admin
     disabled
     oneshot
@@ -601,7 +601,7 @@ on property:bluetooth.hciattach=true
 on property:bluetooth.hciattach=false
     setprop bluetooth.status off
 
-service irsc_util /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
     user root
     oneshot
@@ -613,17 +613,17 @@ service ril-daemon0 /vendor/bin/hw/rild
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
     disabled
 
-service qcamerasvr /system/bin/mm-qcamera-daemon
+service qcamerasvr /vendor/bin/mm-qcamera-daemon
     class late_start
     user camera
     group camera system inet input graphics
 
-service qmuxd /system/bin/qmuxd
+service qmuxd /vendor/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps oem_2950 diag log qcom_diag
 
-service netmgrd /system/bin/netmgrd
+service netmgrd /vendor/bin/netmgrd
     class main
     user root
     group radio audio bluetooth gps oem_2950 diag log qcom_diag
@@ -633,17 +633,17 @@ service debug_log /system/bin/sh /debug_log.sh
     user root
     disabled
 
-service qseecomd /system/bin/qseecomd
+service qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
 
-service rfs_access /system/bin/rfs_access
+service rfs_access /vendor/bin/rfs_access
     class core
     user root
     group system net_raw
 
-service rmt_storage /system/bin/rmt_storage
+service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
     disabled
@@ -652,7 +652,7 @@ on property:ro.boot.emmc=true
     start rfs_access
     start rmt_storage
 
-service ril-fix /system/bin/sh /system/etc/init.ril.sh
+service ril-fix /system/bin/sh /vendor/etc/init.ril.sh
    class main
    user root
    oneshot
@@ -664,18 +664,23 @@ on property:persist.sys.ssr.restart_level=1
 on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
 
-service thermal-engine /system/bin/thermal-engine -c /etc/thermal-engine-8226.conf
+service thermal-engine /vendor/bin/thermal-engine -c /etc/thermal-engine-8226.conf
     class core
     seclabel u:r:thermal-engine:s0
     user root
     group root
 
-service time_daemon /system/bin/time_daemon
+service time_daemon /vendor/bin/time_daemon
     class late_start
     user root
     group root
 
-service wcnss-service /system/bin/wcnss_service
+service fwlink /init.firmware.sh
+    user root
+    disabled
+    oneshot
+
+service wcnss-service /vendor/bin/wcnss_service
     class late_start
     user system
     group system wifi
@@ -684,9 +689,9 @@ service wcnss-service /system/bin/wcnss_service
 # WPA
 service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
-    -I/system/etc/wifi/p2p_supplicant_overlay.conf -N \
+    -I/vendor/etc/wifi/p2p_supplicant_overlay.conf -N \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -I/vendor/etc/wifi/wpa_supplicant_overlay.conf \
     -puse_p2p_group_interface=1 \
     -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
     #   we will start as root and wpa_supplicant will switch to user wifi
