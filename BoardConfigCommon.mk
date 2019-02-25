@@ -52,11 +52,11 @@ TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
 
 # Charger
+BOARD_CHARGING_MODE_BOOTING_LPM := "/sys/class/power_supply/battery/batt_lp_charging"
 BOARD_BATTERY_DEVICE_NAME := "battery"
 BOARD_CHARGING_CMDLINE_NAME := "androidboot.mode"
 BOARD_CHARGING_CMDLINE_VALUE := "charger"
-BOARD_CHARGER_ENABLE_SUSPEND := true
-BOARD_CHARGER_SHOW_PERCENTAGE := true
+BOARD_CHARGER_DISABLE_INIT_BLANK := true
 WITH_LINEAGE_CHARGER := false
 
 # Custom RIL class
@@ -91,6 +91,10 @@ TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
+
+# Healthd
+BOARD_HAL_STATIC_LIBRARIES := libhealthd.msm8226
+BOARD_HEALTHD_CUSTOM_CHARGER_RES := device/samsung/msm8226-common/libhealthd/images
 
 # HIDL
 DEVICE_MANIFEST_FILE := device/samsung/msm8226-common/manifest.xml
