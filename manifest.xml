@@ -99,6 +99,37 @@
         </interface>
     </hal>
     <hal format="hidl">
+        <name>android.hardware.graphics.composer</name>
+        <transport>hwbinder</transport>
+        <version>2.1</version>
+        <interface>
+            <name>IComposer</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.media.omx</name>
+        <transport arch="32">passthrough</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IOmx</name>
+            <instance>default</instance>
+        </interface>
+        <interface>
+            <name>IOmxStore</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
+        <name>android.hardware.gatekeeper</name>
+        <transport arch="32">passthrough</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IGatekeeper</name>
+            <instance>default</instance>
+        </interface>
+    </hal>
+    <hal format="hidl">
         <name>android.hardware.graphics.mapper</name>
         <transport arch="32">passthrough</transport>
         <version>2.0</version>
@@ -185,86 +216,6 @@
         </interface>
     </hal>
     <hal format="hidl">
-    <hal format="hidl" optional="true">
-        <name>android.frameworks.displayservice</name>
-        <version>1.0</version>
-        <interface>
-            <name>IDisplayService</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.frameworks.schedulerservice</name>
-        <version>1.0</version>
-        <interface>
-            <name>ISchedulingPolicyService</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.frameworks.sensorservice</name>
-        <version>1.0</version>
-        <interface>
-            <name>ISensorManager</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.hardware.graphics.composer</name>
-        <version>2.1</version>
-        <interface>
-            <name>IComposer</name>
-            <instance>vr</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.hidl.allocator</name>
-        <version>1.0</version>
-        <interface>
-            <name>IAllocator</name>
-            <instance>ashmem</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.hidl.manager</name>
-        <version>1.1</version>
-        <interface>
-            <name>IServiceManager</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.hidl.memory</name>
-        <version>1.0</version>
-        <interface>
-            <name>IMapper</name>
-            <instance>ashmem</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.hidl.token</name>
-        <version>1.0</version>
-        <interface>
-            <name>ITokenManager</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.system.net.netd</name>
-        <version>1.0</version>
-        <interface>
-            <name>INetd</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
-    <hal format="hidl" optional="true">
-        <name>android.system.wifi.keystore</name>
-        <version>1.0</version>
-        <interface>
-            <name>IKeystore</name>
-            <instance>default</instance>
-        </interface>
-    </hal>
         <name>android.hardware.vibrator</name>
         <transport arch="32">passthrough</transport>
         <version>1.0</version>

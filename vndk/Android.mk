@@ -1,41 +1,22 @@
-VNDK_SP_LIBRARIES := \
-    android.hardware.graphics.allocator@2.0 \
-    android.hardware.graphics.common@1.0 \
-    android.hardware.graphics.mapper@2.0 \
-    android.hardware.renderscript@1.0 \
-    android.hidl.memory@1.0 \
-    libRSCpuRef \
-    libRSDriver \
-    libRS_internal \
-    libbacktrace \
-    libbase \
-    libbcinfo \
-    libblas \
-    libc++ \
-    libcompiler_rt \
-    libcutils \
-    libft2 \
-    libhardware \
-    libhidlbase \
-    libhidlmemory \
-    libhidltransport \
-    libhwbinder \
-    libion \
-    liblzma \
-    libpng \
-    libunwind \
-    libutils \
-    libz
+VNDK_SP_LIBRARIES :=
 
 EXTRA_VENDOR_LIBRARIES := \
     android.hidl.base@1.0 \
     android.hidl.manager@1.0 \
+    libhardware_legacy \
     libbinder \
     libui \
-    libhardware_legacy \
     android.hardware.configstore@1.0 \
     android.hardware.configstore-utils \
-    android.hardware.nfc@1.0
+    libstagefright_foundation \
+    libstdc++ \
+    libnativehelper \
+    libgui \
+    android.hidl.token@1.0-utils \
+    android.hardware.graphics.bufferqueue@1.0 \
+    android.hidl.token@1.0 \
+    android.hardware.media.omx@1.0 \
+    android.hardware.media@1.0
 
 #-------------------------------------------------------------------------------
 # VNDK Modules
@@ -86,11 +67,10 @@ $(foreach lib,$(EXTRA_VENDOR_LIBRARIES),\
 #-------------------------------------------------------------------------------
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := vndk-sp
+LOCAL_MODULE := s3ve3g-vndk-extra
 LOCAL_MODULE_TAGS := optional
 LOCAL_REQUIRED_MODULES := \
     $(addsuffix .vndk-sp-gen,$(VNDK_SP_LIBRARIES)) \
     $(addsuffix .vndk-sp-ext-gen,$(VNDK_SP_EXT_LIBRARIES)) \
     $(addsuffix .vndk-ext-gen,$(EXTRA_VENDOR_LIBRARIES))
 include $(BUILD_PHONY_PACKAGE)
-

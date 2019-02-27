@@ -1,6 +1,3 @@
-# Art
-dalvik.vm.dex2oat-swap=false
-
 # Audio
 af.fast_track_multiplier=1
 audio_hal.period_size=192
@@ -39,6 +36,7 @@ media.stagefright.less-secure=true
 persist.media.treble_omx=false
 
 # Dalvik
+dalvik.vm.dex2oat-swap=false
 dalvik.vm.heapstartsize=8m
 dalvik.vm.heapgrowthlimit=128m
 dalvik.vm.heapsize=512m
@@ -52,9 +50,6 @@ ro.opengles.version=196608
 ro.qualcomm.cabl=0
 ro.sf.lcd_density=320
 debug.hwui.use_buffer_age=false
-
-# Android GO
-ro.config.low_ram=true
 
 # GPS
 persist.gps.qc_nlp_in_use=1
@@ -95,7 +90,7 @@ debug.sensors=1
 persist.timed.enable=true
 
 # Vendor security patch level
-ro.lineage.build.vendor_security_patch=2017-08-01
+ro.lineage.build.vendor_security_patch=2019-02-27
 
 # Wi-Fi
 ro.disableWifiApFirmwareReload=true

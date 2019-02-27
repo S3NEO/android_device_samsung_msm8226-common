@@ -32,6 +32,8 @@ BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
 # Filesystem
 TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
 
+BOARD_USES_QCOM_HARDWARE := true
+
 #ADB
 TARGET_USES_LEGACY_ADB_INTERFACE :=true
 
@@ -50,7 +52,6 @@ TARGET_QCOM_NO_FM_FIRMWARE := true
 BOARD_HAVE_QCOM_FM := true
 
 # Properites
-BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
 # SELinux
 include device/qcom/sepolicy/sepolicy.mk
