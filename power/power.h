@@ -70,7 +70,8 @@ static power_profile profiles[PROFILE_MAX] = {
         .target_loads = 80,
         .target_loads_off = 90,
         .scaling_max_freq = 1401600,
-        .scaling_min_freq = 787200,
+	// Our scaling_min_freq shouldnt be above our minimum any time!
+        .scaling_min_freq = 384000,
         .scaling_min_freq_off = 300000,
     },
     [PROFILE_HIGH_PERFORMANCE] = {

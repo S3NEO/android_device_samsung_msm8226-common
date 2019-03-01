@@ -23,7 +23,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <utils/Log.h>
+#include <log/log.h>
+#include <pthread.h>
 
 #include "power.h"
 
@@ -38,7 +39,8 @@
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 static int boostpulse_fd = -1;
 
-static int current_power_profile = -1;
+// Balanced profile by default
+static int current_power_profile = 1;
 static int requested_power_profile = -1;
 
 static int sysfs_write_str(char *path, char *s)
@@ -103,68 +105,16 @@ static void power_set_interactive_ext(int on) {
 
 static void power_set_interactive(__attribute__((unused)) struct power_module *module, int on)
 {
-    if (!is_profile_valid(current_power_profile)) {
-        ALOGD("%s: no power profile selected yet", __func__);
-        return;
-    }
-
+    /* We want to first set the input device state otherwise
+     * it never gets turned off/on when our HAL isnt compatible with the power_profiles from
+     * our framework
+     */
     power_set_interactive_ext(on);
-
-    if (on) {
-        sysfs_write_int(INTERACTIVE_PATH "hispeed_freq",
-                        profiles[current_power_profile].hispeed_freq);
-        sysfs_write_int(INTERACTIVE_PATH "go_hispeed_load",
-                        profiles[current_power_profile].go_hispeed_load);
-        sysfs_write_int(INTERACTIVE_PATH "target_loads",
-                        profiles[current_power_profile].target_loads);
-        sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
-                        profiles[current_power_profile].scaling_min_freq);
-    } else {
-        sysfs_write_int(INTERACTIVE_PATH "hispeed_freq",
-                        profiles[current_power_profile].hispeed_freq_off);
-        sysfs_write_int(INTERACTIVE_PATH "go_hispeed_load",
-                        profiles[current_power_profile].go_hispeed_load_off);
-        sysfs_write_int(INTERACTIVE_PATH "target_loads",
-                        profiles[current_power_profile].target_loads_off);
-        sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
-                        profiles[current_power_profile].scaling_min_freq_off);
-    }
 }
 
-static void set_power_profile(int profile)
+static void set_power_profile(__attribute__((unused)) int profile)
 {
-    if (!is_profile_valid(profile)) {
-        ALOGE("%s: unknown profile: %d", __func__, profile);
-        return;
-    }
-
-    if (profile == current_power_profile)
-        return;
-
-    ALOGD("%s: setting profile %d", __func__, profile);
-
-    sysfs_write_int(INTERACTIVE_PATH "boost",
-                    profiles[profile].boost);
-    sysfs_write_int(INTERACTIVE_PATH "boostpulse_duration",
-                    profiles[profile].boostpulse_duration);
-    sysfs_write_int(INTERACTIVE_PATH "go_hispeed_load",
-                    profiles[profile].go_hispeed_load);
-    sysfs_write_int(INTERACTIVE_PATH "hispeed_freq",
-                    profiles[profile].hispeed_freq);
-    sysfs_write_int(INTERACTIVE_PATH "min_sample_time",
-                    profiles[profile].min_sample_time);
-    sysfs_write_int(INTERACTIVE_PATH "timer_rate",
-                    profiles[profile].timer_rate);
-    sysfs_write_int(INTERACTIVE_PATH "above_hispeed_delay",
-                    profiles[profile].above_hispeed_delay);
-    sysfs_write_int(INTERACTIVE_PATH "target_loads",
-                    profiles[profile].target_loads);
-    sysfs_write_int(CPUFREQ_PATH "scaling_max_freq",
-                    profiles[profile].scaling_max_freq);
-    sysfs_write_int(CPUFREQ_PATH "scaling_min_freq",
-                    profiles[profile].scaling_min_freq);
-
-    current_power_profile = profile;
+    return;
 }
 
 static void power_hint(__attribute__((unused)) struct power_module *module,
@@ -175,28 +125,6 @@ static void power_hint(__attribute__((unused)) struct power_module *module,
 
     switch (hint) {
     case POWER_HINT_INTERACTION:
-        if (!is_profile_valid(current_power_profile)) {
-            ALOGD("%s: no power profile selected yet", __func__);
-            return;
-        }
-
-        if (!profiles[current_power_profile].boostpulse_duration)
-            return;
-
-        if (boostpulse_open() >= 0) {
-            snprintf(buf, sizeof(buf), "%d", 1);
-            len = write(boostpulse_fd, &buf, sizeof(buf));
-            if (len < 0) {
-                strerror_r(errno, buf, sizeof(buf));
-                ALOGE("Error writing to boostpulse: %s\n", buf);
-
-                pthread_mutex_lock(&lock);
-                close(boostpulse_fd);
-                boostpulse_fd = -1;
-                pthread_mutex_unlock(&lock);
-            }
-        }
-        break;
     case POWER_HINT_SET_PROFILE:
         pthread_mutex_lock(&lock);
         set_power_profile(*(int32_t *)data);
@@ -262,7 +190,7 @@ struct power_module HAL_MODULE_INFO_SYM = {
         .module_api_version = POWER_MODULE_API_VERSION_0_2,
         .hal_api_version = HARDWARE_HAL_API_VERSION,
         .id = POWER_HARDWARE_MODULE_ID,
-        .name = "msm8226 Power HAL",
+        .name = "MSM8226 Power HAL",
         .author = "The LineageOS Project",
         .methods = &power_module_methods,
     },
@@ -272,4 +200,3 @@ struct power_module HAL_MODULE_INFO_SYM = {
     .powerHint = power_hint,
     .getFeature = get_feature
 };
-

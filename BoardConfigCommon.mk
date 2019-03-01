@@ -15,12 +15,7 @@
 # Inherit from qcom-common
 -include device/samsung/qcom-common/BoardConfigCommon.mk
 
-#-include vendor/qcom/proprietary/common/msm8226/BoardConfigVendor.mk
-
 VENDOR_PATH := device/samsung/msm8226-common
-
-#QC_PROP_ROOT := vendor/qcom/proprietary
-#PROTOBUF_SUPPORTED := true
 
 include device/samsung/msm8226-common/board/*.mk
 
@@ -32,12 +27,14 @@ BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
 # Filesystem
 TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
 
-#ADB
-TARGET_USES_LEGACY_ADB_INTERFACE :=true
+BOARD_USES_QCOM_HARDWARE := true
 
-#HIDL
-PRODUCT_COPY_FILES += \
-    $(VENDOR_PATH)/manifest.xml:system/vendor/manifest.xml
+# HIDL
+DEVICE_MANIFEST_FILE := $(VENDOR_PATH)/manifest.xml
+DEVICE_MATRIX_FILE := $(VENDOR_PATH)/compatibility_matrix.xml
+
+# Light
+TARGET_PROVIDES_LIBLIGHT := true
 
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
