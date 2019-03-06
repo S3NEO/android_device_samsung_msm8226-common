@@ -77,6 +77,9 @@ on fs
     start debug_log
 
 on post-fs-data
+    # Fix headset h2w switch not recognized (theres no sammy phone with qcom + treble yet #FIRST #WINNER :D )
+    setprop persist.sys.overlay.devinputjack false   
+
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
     chown system system /data/connectivity
