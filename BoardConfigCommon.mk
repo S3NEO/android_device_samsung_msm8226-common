@@ -26,8 +26,8 @@ include device/samsung/msm8226-common/board/*.mk
 
 TARGET_SPECIFIC_HEADER_PATH := $(VENDOR_PATH)/include
 
-# CMHW
-BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/cmhw
+# LineageHW
+BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/lineagehw
 
 # Filesystem
 TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
@@ -46,6 +46,9 @@ EXTENDED_FONT_FOOTPRINT := true
 AUDIO_FEATURE_ENABLED_FM := true
 TARGET_QCOM_NO_FM_FIRMWARE := true
 BOARD_HAVE_QCOM_FM := true
+
+# Time services
+BOARD_USES_QC_TIME_SERVICES := true
 
 # Properties (reset them here, include more in device if needed)
 TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
