@@ -527,15 +527,23 @@ on property:sys.boot_completed=1
     write /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay 20000
     write /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load 99
     write /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq 998400
+    write /sys/devices/system/cpu/cpufreq/interactive/io_is_busy 1
+    write /sys/devices/system/cpu/cpufreq/interactive/min_sample_time 40000
+    write /sys/devices/system/cpu/cpufreq/interactive/timer_rate 30000
+    write /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor 100000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 300000
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 300000    
     
-    # Disable all hotplugs
-    write /sys/module/intelli_plug/parameters/intelli_plug_active 0
-    write /sys/module/intelli_plug/parameters/touch_boost_active 0
-    write /sys/module/cpu_boost/parameters/input_boost_ms 0
-    write /sys/module/msm_hotplug/msm_enabled 0
-
-    # we need M(ake)P(oor)decision??
-
+    write /sys/module/msm_thermal/core_control/enabled 1
+    
+    # Configure the cpu-boost module
+    write /sys/module/cpu_boost/parameters/boost_ms 20
+    write /sys/module/cpu_boost/parameters/sync_threshold 1728000
+    write /sys/module/cpu_boost/parameters/input_boost_freq 1497600
+    write /sys/module/cpu_boost/parameters/input_boost_ms 40    
+    
     # Bring all CPUs online, and set node permissions AFTER disabling hotplugs otherwise
     # only 1 core will be active
     write /sys/devices/system/cpu/cpu1/online 1
@@ -604,17 +612,11 @@ service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     user root
     oneshot
 
-service ril-daemon0 /vendor/bin/hw/rild
-    class main
-    user radio
-    group root radio cache inet misc audio log readproc wakelock oem_2901 diag oem_2950
-    capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
-    disabled
-
 service mpdecision /vendor/bin/mpdecision --avg_comp
     class main
     user root
     group root readproc
+    disabled
 
 service qcamerasvr /vendor/bin/mm-qcamera-daemon
     class main
@@ -624,12 +626,7 @@ service qcamerasvr /vendor/bin/mm-qcamera-daemon
 service qmuxd /vendor/bin/qmuxd
     class core
     user radio
-    group radio audio bluetooth gps oem_2950 diag log qcom_diag
-
-service netmgrd /vendor/bin/netmgrd
-    class main
-    user root
-    group radio audio bluetooth gps oem_2950 diag log qcom_diag
+    group radio audio bluetooth gps oem_2950 log
 
 service qseecomd /vendor/bin/qseecomd
     class core
@@ -645,7 +642,6 @@ service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
     group system wakelock
-    disabled
 
 on property:ro.boot.emmc=true
     start rfs_access
@@ -659,10 +655,12 @@ on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
     
 service thermal-engine /vendor/bin/thermal-engine -c /vendor/etc/thermal-engine-8226.conf
-    class core
-    seclabel u:r:thermal-engine:s0
-    user root
-    group root    
+   class main
+   user root
+   socket thermal-send-client stream 0666 system system
+   socket thermal-recv-client stream 0660 system system
+   socket thermal-recv-passive-client stream 0666 system system
+   group root   
 
 service time_daemon /vendor/bin/time_daemon
     class late_start
