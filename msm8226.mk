@@ -226,6 +226,10 @@ PRODUCT_PACKAGES += \
     init.recovery.qcom.rc \
     ueventd.qcom.rc
 
+# RenderScript HAL
+PRODUCT_PACKAGES += \
+    android.hardware.renderscript@1.0-impl    
+
 # Lights
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-impl \
