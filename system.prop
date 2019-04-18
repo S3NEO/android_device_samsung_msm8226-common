@@ -74,8 +74,12 @@ ro.nfc.port=I2C
 # this prop is only for samsung
 # ro.debug_level=0x4948
 #####
-persist.data.netmgrd.qos.enable=true
+persist.data.netmgrd.qos.enable=false
 persist.data.qmi.adb_logmask=0
+persist.radio.add_power_save=1
+ro.telephony.ril.config=simactivation
+ro.use_data_netmgrd=false
+rild.libargs=-d /dev/smd0
 rild.libpath=/system/vendor/lib/libsec-ril.so
 ro.telephony.mms_data_profile=5
 ro.ril.telephony.qan_resp_strings=6
@@ -84,7 +88,7 @@ ro.ril.telephony.qan_resp_strings=6
 ro.telephony.call_ring.multiple=0
 
 # Subsystem
-persist.sys.ssr.enable_debug=0
+persist.sys.ssr.enable_debug=1
 
 # Sensors
 ro.qc.sdk.gestures.camera=false

@@ -74,8 +74,6 @@ on fs
     # Kickstart the Wireless subsystem
     write /dev/wcnss_wlan 1
 
-    start debug_log
-
 on post-fs-data
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
@@ -536,8 +534,7 @@ on property:sys.boot_completed=1
     write /sys/module/cpu_boost/parameters/input_boost_ms 0
     write /sys/module/msm_hotplug/msm_enabled 0
 
-    # we dont need M(ake)P(oor)decision
-    stop mpdecision
+    # we need M(ake)P(oor)decision??
 
     # Bring all CPUs online, and set node permissions AFTER disabling hotplugs otherwise
     # only 1 core will be active
@@ -562,8 +559,9 @@ on charger
     mount ext4 /dev/block/platform/msm_sdcc.1/by-name/system /system ro barrier=1
     class_start charger
 
-# Services
-service adsprpcd /system/bin/adsprpcd
+# Services begin here
+
+service adsprpcd /vendor/bin/adsprpcd
     class main
     user media
     group media
@@ -578,7 +576,7 @@ service charger /sbin/healthd -c
     critical
     seclabel u:r:charger:s0
 
-service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
+service ds_fmc_appd /vendor/bin/ds_fmc_appd -p "rmnet0" -D
     class late_start
     user root
     group radio wifi inet
@@ -601,7 +599,7 @@ on property:bluetooth.hciattach=true
 on property:bluetooth.hciattach=false
     setprop bluetooth.status off
 
-service irsc_util /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
     user root
     oneshot
@@ -613,49 +611,46 @@ service ril-daemon0 /vendor/bin/hw/rild
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
     disabled
 
-service qcamerasvr /system/bin/mm-qcamera-daemon
-    class late_start
-    user camera
-    group camera system inet input graphics
-
-service qmuxd /system/bin/qmuxd
+service mpdecision /vendor/bin/mpdecision --avg_comp
     class main
     user root
-    group radio audio bluetooth gps oem_2950 diag log qcom_diag
-
-service netmgrd /system/bin/netmgrd
-    class main
-    user root
-    group radio audio bluetooth gps oem_2950 diag log qcom_diag
-
-service debug_log /system/bin/sh /debug_log.sh
-    class main
-    user root
+    group root readproc
     disabled
 
-service qseecomd /system/bin/qseecomd
+service qcamerasvr /vendor/bin/mm-qcamera-daemon
+    class main
+    user camera
+    group camera system inet input graphics bluetooth
+
+service qmuxd /vendor/bin/qmuxd
+    class core
+    user radio
+    group radio audio bluetooth gps oem_2950 diag log qcom_diag
+
+service netmgrd /vendor/bin/netmgrd
+    class main
+    user root
+    group radio audio bluetooth gps oem_2950 diag log qcom_diag
+
+service qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
 
-service rfs_access /system/bin/rfs_access
+service rfs_access /vendor/bin/rfs_access
     class core
-    user root
+    user system
     group system net_raw
 
-service rmt_storage /system/bin/rmt_storage
+service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
+    group system wakelock
     disabled
 
 on property:ro.boot.emmc=true
     start rfs_access
     start rmt_storage
-
-service ril-fix /system/bin/sh /system/etc/init.ril.sh
-   class main
-   user root
-   oneshot
 
 # Limit to SoC reset (1) and independent SSR (3)
 on property:persist.sys.ssr.restart_level=1
@@ -663,14 +658,14 @@ on property:persist.sys.ssr.restart_level=1
 
 on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
-
-service thermal-engine /system/bin/thermal-engine -c /etc/thermal-engine-8226.conf
+    
+service thermal-engine /vendor/bin/thermal-engine -c /vendor/etc/thermal-engine-8226.conf
     class core
     seclabel u:r:thermal-engine:s0
     user root
-    group root
+    group root    
 
-service time_daemon /system/bin/time_daemon
+service time_daemon /vendor/bin/time_daemon
     class late_start
     user root
     group root
