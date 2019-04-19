@@ -212,6 +212,17 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libsecnativefeature
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.rild.nitz_plmn="" \
+    persist.rild.nitz_long_ons_0="" \
+    persist.rild.nitz_long_ons_1="" \
+    persist.rild.nitz_long_ons_2="" \
+    persist.rild.nitz_long_ons_3="" \
+    persist.rild.nitz_short_ons_0="" \
+    persist.rild.nitz_short_ons_1="" \
+    persist.rild.nitz_short_ons_2="" \
+    persist.rild.nitz_short_ons_3=""    
+    
 # Ramdisk
 PRODUCT_PACKAGES += \
     init.qcom.bt.sh \
