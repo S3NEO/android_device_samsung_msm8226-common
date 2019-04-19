@@ -32,9 +32,6 @@ BOARD_HARDWARE_CLASS += $(VENDOR_PATH)/lineagehw
 # Filesystem
 TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
 
-#ADB
-TARGET_USES_LEGACY_ADB_INTERFACE :=true
-
 # HIDL
 DEVICE_MANIFEST_FILE := device/samsung/msm8226-common/manifest.xml
 DEVICE_MATRIX_FILE := device/samsung/msm8226-common/compatibility_matrix.xml
