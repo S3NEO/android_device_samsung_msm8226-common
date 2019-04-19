@@ -91,6 +91,9 @@ ro.qc.sdk.camera.facialproc=false
 ro.qc.sdk.sensors.gestures=true
 debug.sensors=1
 
+# Tethering
+net.tethering.noprovisioning=true
+
 # Time
 persist.timed.enable=true
 
