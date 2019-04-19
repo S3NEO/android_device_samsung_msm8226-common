@@ -71,6 +71,12 @@ PRODUCT_PACKAGES += \
     libxml2 \
     Snap
 
+# Offmode charger
+# Use LineageOS images if available, aosp ones otherwise
+PRODUCT_PACKAGES += \
+    charger_res_images \
+    lineage_charger_res_images
+    
 # CRDA
 PRODUCT_PACKAGES += \
     crda \
