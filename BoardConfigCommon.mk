@@ -35,10 +35,10 @@ TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
 #ADB
 TARGET_USES_LEGACY_ADB_INTERFACE :=true
 
-#HIDL
-PRODUCT_COPY_FILES += \
-    $(VENDOR_PATH)/manifest.xml:system/vendor/manifest.xml
-
+# HIDL
+DEVICE_MANIFEST_FILE := device/samsung/msm8226-common/manifest.xml
+DEVICE_MATRIX_FILE := device/samsung/msm8226-common/compatibility_matrix.xml
+    
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
 
