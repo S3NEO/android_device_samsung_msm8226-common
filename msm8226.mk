@@ -275,5 +275,8 @@ PRODUCT_PACKAGES += \
     libwcnss_qmi \
     wcnss_service
 
+# NFC
+$(call inherit-product, device/samsung/msm8226-common/nfc/pn547/product.mk)
+
 # Inherit from qcom-common
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
