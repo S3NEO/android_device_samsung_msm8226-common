@@ -930,7 +930,6 @@ QCamera2HardwareInterface::QCamera2HardwareInterface(int cameraId)
       m_cbNotifier(this),
       m_bShutterSoundPlayed(false),
       m_currentFocusState(CAM_AF_NOT_FOCUSED),
-      m_bStartZSLSnapshotCalled(false),
       m_pPowerModule(NULL),
       mDumpFrmCnt(0),
       mDumpSkipCnt(0)
@@ -1023,6 +1022,7 @@ int QCamera2HardwareInterface::openCamera()
         ALOGE("Failure: Camera already opened");
         return ALREADY_EXISTS;
     }
+
     mCameraHandle = camera_open(mCameraId);
     if (!mCameraHandle) {
         ALOGE("camera_open failed.");
@@ -1036,6 +1036,8 @@ int QCamera2HardwareInterface::openCamera()
     int32_t rc = m_postprocessor.init(jpegEvtHandle, this);
     if (rc != 0) {
         ALOGE("Init Postprocessor failed");
+        mCameraHandle->ops->close_camera(mCameraHandle->camera_handle);
+        mCameraHandle = NULL;
         return UNKNOWN_ERROR;
     }
 
@@ -1080,8 +1082,15 @@ int QCamera2HardwareInterface::closeCamera()
     int rc = NO_ERROR;
     int i;
 
+    if (!mCameraOpened) {
+        return NO_ERROR;
+    }
+
     // deinit Parameters
     mParameters.deinit();
+
+    // exit notifier
+    m_cbNotifier.exit();
 
     // stop and deinit postprocessor
     m_postprocessor.stop();
@@ -1242,8 +1251,7 @@ uint8_t QCamera2HardwareInterface::getBufNumRequired(cam_stream_type_t stream_ty
     int bufferCnt = 0;
     int minCaptureBuffers = mParameters.getNumOfSnapshots();
 
-    int zslQBuffers = mParameters.getZSLQueueDepth() +
-                      mParameters.getMaxUnmatchedFramesInQueue();
+    int zslQBuffers = mParameters.getZSLQueueDepth();
 
     int minCircularBufNum = CAMERA_MIN_STREAMING_BUFFERS +
                             CAMERA_MIN_JPEG_ENCODING_BUFFERS +
@@ -1473,11 +1481,14 @@ QCameraHeapMemory *QCamera2HardwareInterface::allocateStreamInfoBuf(
         break;
     }
 
-    //set flip mode based on Stream type;
-    int flipMode = mParameters.getFlipMode(stream_type);
-    if (flipMode > 0) {
-        streamInfo->pp_config.feature_mask |= CAM_QCOM_FEATURE_FLIP;
-        streamInfo->pp_config.flip = flipMode;
+    if (!isZSLMode() ||
+        (isZSLMode() && (stream_type != CAM_STREAM_TYPE_SNAPSHOT))) {
+        //set flip mode based on Stream type;
+        int flipMode = mParameters.getFlipMode(stream_type);
+        if (flipMode > 0) {
+            streamInfo->pp_config.feature_mask |= CAM_QCOM_FEATURE_FLIP;
+            streamInfo->pp_config.flip = flipMode;
+        }
     }
 
     return streamInfoBuf;
@@ -1988,11 +1999,6 @@ int QCamera2HardwareInterface::cancelPicture()
         QCameraPicChannel *pZSLChannel =
             (QCameraPicChannel *)m_channels[QCAMERA_CH_TYPE_ZSL];
         if (NULL != pZSLChannel) {
-            if (m_bStartZSLSnapshotCalled) {
-                mCameraHandle->ops->stop_zsl_snapshot(
-                        mCameraHandle->camera_handle);
-                m_bStartZSLSnapshotCalled = false;
-            }
             pZSLChannel->cancelPicture();
         }
     } else {
@@ -2560,15 +2566,7 @@ int32_t QCamera2HardwareInterface::processPrepSnapshotDoneEvent(
 
     if (m_channels[QCAMERA_CH_TYPE_ZSL] &&
         prep_snapshot_state == NEED_FUTURE_FRAME) {
-
-        ret = mCameraHandle->ops->start_zsl_snapshot(
-                            mCameraHandle->camera_handle);
-        if (ret < 0) {
-            ALOGE("%s: start_led_zsl_capture failed %d",
-                            __func__, ret);
-            return ret;
-        }
-        m_bStartZSLSnapshotCalled = true;
+        ALOGD("%s: already handled in mm-camera-intf, no ops here", __func__);
     }
     return ret;
 }
@@ -3076,7 +3074,7 @@ int32_t QCamera2HardwareInterface::addCaptureChannel()
     }
 
     rc = addStreamToChannel(pChannel, CAM_STREAM_TYPE_POSTVIEW,
-                            postview_stream_cb_routine, this);
+                            NULL, this);
 
     if (rc != NO_ERROR) {
         ALOGE("%s: add postview stream failed, ret = %d", __func__, rc);
@@ -3225,7 +3223,8 @@ QCameraReprocessChannel *QCamera2HardwareInterface::addOnlineReprocChannel(
                                               pp_config,
                                               pInputChannel,
                                               minStreamBufNum,
-                                              &gCamCapability[mCameraId]->padding_info);
+                                              &gCamCapability[mCameraId]->padding_info,
+                                              mParameters);
     if (rc != NO_ERROR) {
         delete pChannel;
         return NULL;
@@ -3662,9 +3661,13 @@ int32_t QCamera2HardwareInterface::processFaceDetectionResult(cam_face_detection
     cbArg.user_data = faceResultBuffer;
     cbArg.cookie = this;
     cbArg.release_cb = releaseCameraMemory;
-    m_cbNotifier.notifyCallback(cbArg);
+    int32_t rc = m_cbNotifier.notifyCallback(cbArg);
+    if (rc != NO_ERROR) {
+        ALOGE("%s: fail sending notification", __func__);
+        faceResultBuffer->release(faceResultBuffer);
+    }
 
-    return NO_ERROR;
+    return rc;
 }
 
 /*===========================================================================
@@ -3758,8 +3761,11 @@ int32_t QCamera2HardwareInterface::processHistogramStats(cam_hist_stats_t &stats
     cbArg.user_data = histBuffer;
     cbArg.cookie = this;
     cbArg.release_cb = releaseCameraMemory;
-    m_cbNotifier.notifyCallback(cbArg);
-
+    int32_t rc = m_cbNotifier.notifyCallback(cbArg);
+    if (rc != NO_ERROR) {
+        ALOGE("%s: fail sending notification", __func__);
+        histBuffer->release(histBuffer);
+    }
     return NO_ERROR;
 }
 
@@ -3950,6 +3956,10 @@ bool QCamera2HardwareInterface::isCACEnabled()
  *==========================================================================*/
 bool QCamera2HardwareInterface::needReprocess()
 {
+
+    ALOGE("%s: YUV Sensor: Reprocessing disabled by default", __func__);
+    return false;
+
     if (!mParameters.isJpegPictureFormat()) {
         // RAW image, no need to reprocess
         return false;
@@ -3960,6 +3970,15 @@ bool QCamera2HardwareInterface::needReprocess()
         // TODO: add for ZSL HDR later
         ALOGD("%s: need do reprocess for ZSL WNR or min PP reprocess", __func__);
         return true;
+    }
+
+    if (isZSLMode()) {
+        int snapshot_flipMode =
+            mParameters.getFlipMode(CAM_STREAM_TYPE_SNAPSHOT);
+        if (snapshot_flipMode > 0) {
+            ALOGD("%s: Need do flip for snapshot in ZSL mode", __func__);
+            return true;
+        }
     }
 
     return needRotationReprocess();
@@ -3977,6 +3996,10 @@ bool QCamera2HardwareInterface::needReprocess()
  *==========================================================================*/
 bool QCamera2HardwareInterface::needRotationReprocess()
 {
+
+    ALOGE("%s: YUV Sensor: Reprocessing disabled by default", __func__);
+    return false;
+
     if (!mParameters.isJpegPictureFormat()) {
         // RAW image, no need to reprocess
         return false;

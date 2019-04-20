@@ -312,7 +312,7 @@ const QCameraParameters::QCameraMap QCameraParameters::PREVIEW_FORMATS_MAP[] = {
     {PIXEL_FORMAT_YUV420SP_ADRENO, CAM_FORMAT_YUV_420_NV21_ADRENO},
     {PIXEL_FORMAT_YV12,            CAM_FORMAT_YUV_420_YV12},
     {PIXEL_FORMAT_NV12,            CAM_FORMAT_YUV_420_NV12},
-    {QC_PIXEL_FORMAT_NV12_VENUS,   CAM_FORMAT_YUV_420_NV12_VENUS}
+    {QC_PIXEL_FORMAT_NV12_VENUS, CAM_FORMAT_YUV_420_NV12_VENUS}
 };
 
 const QCameraParameters::QCameraMap QCameraParameters::PICTURE_TYPES_MAP[] = {
@@ -572,7 +572,10 @@ QCameraParameters::QCameraParameters()
       m_bNeedLockCAF(false),
       m_bCAFLocked(false),
       m_bAFRunning(false),
+      m_bInited(false),
       m_nBurstNum(1),
+      m_bUpdateEffects(false),
+      m_bSceneTransitionAuto(false),
       m_tempMap()
 {
     char value[PROPERTY_VALUE_MAX];
@@ -627,6 +630,7 @@ QCameraParameters::QCameraParameters(const String8 &params)
     m_bNeedLockCAF(false),
     m_bCAFLocked(false),
     m_bAFRunning(false),
+    m_bInited(false),
     m_nBurstNum(1),
     m_tempMap()
 {
@@ -1010,9 +1014,9 @@ int32_t QCameraParameters::setPreviewSize(const QCameraParameters& params)
     ALOGV("Requested preview size %d x %d", width, height);
 
     // Validate the preview size
-    for (size_t i = 0; i < m_pCapability->video_sizes_tbl_cnt; ++i) {
-        if (width ==  m_pCapability->video_sizes_tbl[i].width
-           && height ==  m_pCapability->video_sizes_tbl[i].height) {
+    for (size_t i = 0; i < m_pCapability->preview_sizes_tbl_cnt; ++i) {
+        if (width ==  m_pCapability->preview_sizes_tbl[i].width
+           && height ==  m_pCapability->preview_sizes_tbl[i].height) {
             // check if need to restart preview in case of preview size change
             int old_width, old_height;
             CameraParameters::getPreviewSize(&old_width, &old_height);
@@ -1502,7 +1506,9 @@ int32_t QCameraParameters::setEffect(const QCameraParameters& params)
     const char *prev_str = get(KEY_EFFECT);
     if (str != NULL) {
         if (prev_str == NULL ||
-            strcmp(str, prev_str) != 0) {
+            strcmp(str, prev_str) != 0 ||
+            m_bUpdateEffects == true ) {
+            m_bUpdateEffects = false;
             return setEffect(str);
         }
     }
@@ -2268,6 +2274,11 @@ int32_t QCameraParameters::setSceneMode(const QCameraParameters& params)
     if (str != NULL) {
         if (prev_str == NULL ||
             strcmp(str, prev_str) != 0) {
+
+            if(strcmp(str, SCENE_MODE_AUTO) == 0) {
+                m_bSceneTransitionAuto = true;
+            }
+
             if ((strcmp(str, SCENE_MODE_HDR) == 0) ||
                 ((prev_str != NULL) && (strcmp(prev_str, SCENE_MODE_HDR) == 0))) {
                 ALOGD("%s: scene mode changed between HDR and non-HDR, need restart", __func__);
@@ -2962,15 +2973,15 @@ int32_t QCameraParameters::initDefaultParameters()
     setFloat(KEY_VERTICAL_VIEW_ANGLE, m_pCapability->ver_view_angle);
 
     // Set supported preview sizes
-    if (m_pCapability->video_sizes_tbl_cnt > 0 &&
-        m_pCapability->video_sizes_tbl_cnt <= MAX_SIZES_CNT) {
+    if (m_pCapability->preview_sizes_tbl_cnt > 0 &&
+        m_pCapability->preview_sizes_tbl_cnt <= MAX_SIZES_CNT) {
         String8 previewSizeValues = createSizesString(
-                m_pCapability->video_sizes_tbl, m_pCapability->video_sizes_tbl_cnt);
+                m_pCapability->preview_sizes_tbl, m_pCapability->preview_sizes_tbl_cnt);
         set(KEY_SUPPORTED_PREVIEW_SIZES, previewSizeValues.string());
         ALOGD("%s: supported preview sizes: %s", __func__, previewSizeValues.string());
         // Set default preview size
-        CameraParameters::setPreviewSize(m_pCapability->video_sizes_tbl[0].width,
-                                         m_pCapability->video_sizes_tbl[0].height);
+        CameraParameters::setPreviewSize(m_pCapability->preview_sizes_tbl[0].width,
+                                         m_pCapability->preview_sizes_tbl[0].height);
     } else {
         ALOGE("%s: supported preview sizes cnt is 0 or exceeds max!!!", __func__);
     }
@@ -3428,6 +3439,8 @@ int32_t QCameraParameters::init(cam_capability_t *capabilities, mm_camera_vtbl_t
 
     initDefaultParameters();
 
+    m_bInited = true;
+
     goto TRANS_INIT_DONE;
 
 TRANS_INIT_ERROR2:
@@ -3452,6 +3465,10 @@ TRANS_INIT_DONE:
  *==========================================================================*/
 void QCameraParameters::deinit()
 {
+    if (!m_bInited) {
+        return;
+    }
+
     //clear all entries in the map
     String8 emptyStr;
     QCameraParameters::unflatten(emptyStr);
@@ -5051,8 +5068,8 @@ int QCameraParameters::getPreviewHalPixelFormat() const
         halPixelFormat = HAL_PIXEL_FORMAT_YV12;
         break;
     case CAM_FORMAT_YUV_420_NV12_VENUS:
-        halPixelFormat = HAL_PIXEL_FORMAT_YCbCr_420_SP_VENUS;
-        break;
+	halPixelFormat = HAL_PIXEL_FORMAT_YCbCr_420_SP_VENUS;
+	break;
     case CAM_FORMAT_YUV_422_NV16:
     case CAM_FORMAT_YUV_422_NV61:
     default:
@@ -5144,7 +5161,7 @@ int QCameraParameters::getZSLBackLookCount()
  *==========================================================================*/
 int QCameraParameters::getMaxUnmatchedFramesInQueue()
 {
-    return m_pCapability->min_num_pp_bufs;
+    return m_pCapability->min_num_pp_bufs + (m_nBurstNum / 10);
 }
 
 /*===========================================================================
@@ -6243,6 +6260,14 @@ int32_t QCameraParameters::commitParamChanges()
     // update local changes
     m_bRecordingHint = m_bRecordingHint_new;
     m_bZslMode = m_bZslMode_new;
+
+    /* After applying scene mode auto,
+      Camera effects need to be reapplied */
+    if ( m_bSceneTransitionAuto ) {
+        m_bUpdateEffects = true;
+        m_bSceneTransitionAuto = false;
+    }
+
 
     return NO_ERROR;
 }

@@ -49,40 +49,6 @@
 #define MAX_ROI 5
 #define MAX_STREAM_NUM_IN_BUNDLE 4
 #define MAX_NUM_STREAMS          8
-#define CHROMATIX_SIZE 21292
-#define COMMONCHROMATIX_SIZE 42044
-#define AFTUNE_SIZE 2000
-#define MAX_SCALE_SIZES_CNT 8
-#define MAX_SAMP_DECISION_CNT     64
-
-#define MAX_ISP_DATA_SIZE 9000
-#define MAX_PP_DATA_SIZE 2000
-#define MAX_AE_STATS_DATA_SIZE  1000
-#define MAX_AWB_STATS_DATA_SIZE 1000
-#define MAX_AF_STATS_DATA_SIZE  1000
-
-
-
-#define TUNING_DATA_VERSION        1
-#define TUNING_SENSOR_DATA_MAX     0x10000 /*(need value from sensor team)*/
-#define TUNING_VFE_DATA_MAX        0x10000 /*(need value from vfe team)*/
-#define TUNING_CPP_DATA_MAX        0x10000 /*(need value from pproc team)*/
-#define TUNING_CAC_DATA_MAX        0x10000 /*(need value from imglib team)*/
-#define TUNING_DATA_MAX            (TUNING_SENSOR_DATA_MAX + \
-                                   TUNING_VFE_DATA_MAX + TUNING_CPP_DATA_MAX + \
-                                   TUNING_CAC_DATA_MAX)
-
-#define TUNING_SENSOR_DATA_OFFSET  0
-#define TUNING_VFE_DATA_OFFSET     TUNING_SENSOR_DATA_MAX
-#define TUNING_CPP_DATA_OFFSET     (TUNING_SENSOR_DATA_MAX + TUNING_VFE_DATA_MAX)
-#define TUNING_CAC_DATA_OFFSET     (TUNING_SENSOR_DATA_MAX + \
-                                   TUNING_VFE_DATA_MAX + TUNING_CPP_DATA_MAX)
-#define MAX_ISP_DATA_SIZE 9000
-#define MAX_PP_DATA_SIZE 2000
-#define MAX_STATS_DATA_SIZE 4000
-
-
-
 
 typedef enum {
     CAM_STATUS_SUCCESS,       /* Operation Succeded */
@@ -406,12 +372,6 @@ typedef enum {
 } cam_auto_exposure_mode_type;
 
 typedef enum {
-    CAM_AE_MODE_OFF,
-    CAM_AE_MODE_ON,
-    CAM_AE_MODE_MAX
-} cam_ae_mode_type;
-
-typedef enum {
     CAM_FOCUS_ALGO_AUTO,
     CAM_FOCUS_ALGO_SPOT,
     CAM_FOCUS_ALGO_CENTER_WEIGHTED,
@@ -478,26 +438,6 @@ typedef enum {
     CAM_FLASH_MODE_MAX
 } cam_flash_mode_t;
 
-typedef enum {
-    CAM_AEC_TRIGGER_IDLE,
-    CAM_AEC_TRIGGER_START
-} cam_aec_trigger_type_t;
-
-typedef enum {
-    CAM_AF_TRIGGER_IDLE,
-    CAM_AF_TRIGGER_START,
-    CAM_AF_TRIGGER_CANCEL
-} cam_af_trigger_type_t;
-
-typedef enum {
-    CAM_AE_STATE_INACTIVE,
-    CAM_AE_STATE_SEARCHING,
-    CAM_AE_STATE_CONVERGED,
-    CAM_AE_STATE_LOCKED,
-    CAM_AE_STATE_FLASH_REQUIRED,
-    CAM_AE_STATE_PRECAPTURE
-} cam_ae_state_t;
-
 typedef struct  {
     int32_t left;
     int32_t top;
@@ -537,34 +477,6 @@ typedef struct {
     char values[MAX_EXP_BRACKETING_LENGTH];  /* user defined values */
 } cam_exp_bracketing_t;
 
-typedef struct {
-  unsigned int num_frames;
-  cam_exp_bracketing_t exp_val;
-} cam_hdr_bracketing_info_t;
-
-typedef struct {
-    uint8_t chromatixData[CHROMATIX_SIZE];
-    uint8_t snapchromatixData[CHROMATIX_SIZE];
-    uint8_t common_chromatixData[COMMONCHROMATIX_SIZE];
-} tune_chromatix_t;
-
-typedef struct {
-    uint8_t af_tuneData[AFTUNE_SIZE];
-} tune_autofocus_t;
-
-typedef struct {
-    uint8_t stepsize;
-    uint8_t direction;
-    uint8_t num_steps;
-    uint8_t ttype;
-} tune_actuator_t;
-
-typedef struct {
-    uint8_t module;
-    uint8_t type;
-    int32_t value;
-} tune_cmd_t;
-
 typedef enum {
     CAM_AEC_ROI_OFF,
     CAM_AEC_ROI_ON
@@ -579,11 +491,6 @@ typedef struct {
     uint32_t x;
     uint32_t y;
 } cam_coordinate_type_t;
-
-typedef struct {
-    int32_t numerator;
-    int32_t denominator;
-} cam_rational_type_t;
 
 typedef struct {
     cam_aec_roi_ctrl_t aec_roi_enable;
@@ -621,11 +528,6 @@ typedef struct {
     int num_fd;
 } cam_fd_set_parm_t;
 
-typedef enum {
-    QCAMERA_FD_PREVIEW,
-    QCAMERA_FD_SNAPSHOT
-}qcamera_face_detect_type_t;
-
 typedef struct {
     int8_t face_id;            /* unique id for face tracking within view unless view changes */
     int8_t score;              /* score of confidence (0, -100) */
@@ -651,7 +553,6 @@ typedef struct {
     uint32_t frame_id;                         /* frame index of which faces are detected */
     uint8_t num_faces_detected;                /* number of faces detected */
     cam_face_detection_info_t faces[MAX_ROI];  /* detailed information of faces detected */
-    qcamera_face_detect_type_t fd_type;        /* face detect for preview or snapshot frame*/
 } cam_face_detection_data_t;
 
 #define CAM_HISTOGRAM_STATS_SIZE 256
@@ -721,11 +622,6 @@ typedef struct {
 } cam_auto_focus_data_t;
 
 typedef struct {
-  uint32_t is_hdr_scene;
-  float    hdr_confidence;
-} cam_asd_hdr_scene_data_t;
-
-typedef struct {
     uint32_t stream_id;
     cam_rect_t crop;
 } cam_stream_crop_info_t;
@@ -744,62 +640,6 @@ typedef struct {
     uint32_t min_frame_idx;
     uint32_t max_frame_idx;
 } cam_frame_idx_range_t;
-
-typedef enum {
-  S_NORMAL = 0,
-  S_SCENERY,
-  S_PORTRAIT,
-  S_PORTRAIT_BACKLIGHT,
-  S_SCENERY_BACKLIGHT,
-  S_BACKLIGHT,
-  S_MAX,
-} cam_auto_scene_t;
-
-typedef struct {
-   uint32_t meta_frame_id;
-} cam_meta_valid_t;
-
-typedef struct {
-    cam_flash_mode_t flash_mode;
-    float            aperture_value;
-} cam_sensor_params_t;
-
-typedef struct {
-    float exp_time;
-    int iso_value;
-    uint32_t flash_needed;
-} cam_ae_params_t;
-
-
-
-typedef struct {
-    uint32_t tuning_data_version;
-    uint32_t tuning_sensor_data_size;
-    uint32_t tuning_vfe_data_size;
-    uint32_t tuning_cpp_data_size;
-    uint32_t tuning_cac_data_size;
-    uint8_t  data[TUNING_DATA_MAX];
-}tuning_params_t;
-
-typedef struct {
-  uint8_t private_isp_data[MAX_ISP_DATA_SIZE];
-} cam_chromatix_lite_isp_t;
-
-typedef struct {
-  uint8_t private_pp_data[MAX_PP_DATA_SIZE];
-} cam_chromatix_lite_pp_t;
-
-typedef struct {
-  uint8_t private_stats_data[MAX_AE_STATS_DATA_SIZE];
-} cam_chromatix_lite_ae_stats_t;
-
-typedef struct {
-  uint8_t private_stats_data[MAX_AWB_STATS_DATA_SIZE];
-} cam_chromatix_lite_awb_stats_t;
-
-typedef struct {
-  uint8_t private_stats_data[MAX_AF_STATS_DATA_SIZE];
-} cam_chromatix_lite_af_stats_t;
 
 typedef  struct {
     uint8_t is_stats_valid;               /* if histgram data is valid */
@@ -824,49 +664,17 @@ typedef  struct {
      * 2. good_frame_idx_range.min_frame_idx - current_frame_idx < 100 */
     cam_frame_idx_range_t good_frame_idx_range;
 
-    uint32_t is_hdr_scene_data_valid;
-    cam_asd_hdr_scene_data_t hdr_scene_data;
-    uint8_t is_asd_decision_valid;
-    cam_auto_scene_t scene; //scene type as decided by ASD
-
     char private_metadata[MAX_METADATA_PAYLOAD_SIZE];
 
-    /* AE parameters */
-    uint8_t is_ae_params_valid;
-    cam_ae_params_t ae_params;
+    char samsung_buffer[264244]; // newer HAL version we need to rebase :(
 
-    /* sensor parameters */
-    uint8_t is_sensor_params_valid;
-    cam_sensor_params_t sensor_params;
-
-    /* Meta valid params */
-    uint8_t is_meta_valid;
-    cam_meta_valid_t meta_valid_params;
-
-    /*Tuning Data*/
-    uint8_t is_tuning_params_valid;
-    tuning_params_t tuning_params;
-
-    uint8_t is_chromatix_lite_isp_valid;
-    cam_chromatix_lite_isp_t chromatix_lite_isp_data;
-
-    uint8_t is_chromatix_lite_pp_valid;
-    cam_chromatix_lite_pp_t chromatix_lite_pp_data;
-
-    uint8_t is_chromatix_lite_ae_stats_valid;
-    cam_chromatix_lite_ae_stats_t chromatix_lite_ae_stats_data;
-
-    uint8_t is_chromatix_lite_awb_stats_valid;
-    cam_chromatix_lite_awb_stats_t chromatix_lite_awb_stats_data;
-
-    uint8_t is_chromatix_lite_af_stats_valid;
-    cam_chromatix_lite_af_stats_t chromatix_lite_af_stats_data;
 } cam_metadata_info_t;
 
+//This has a unknown length so we keep it that long in case we need to add something...
 //All empty fields are assumed to be uint32_t
 //Update the parm_buffer_t accordingly!!!!
 
-//This has a length of 68
+//This has a length of 68 but we only have 60
 typedef enum {
    CAM_INTF_PARM_QUERY_FLASH4SNAP,
    CAM_INTF_PARM_EXPOSURE,
@@ -942,144 +750,6 @@ typedef enum {
 } cam_intf_parm_type_t;
 
 typedef struct {
-    int   forced;
-    union {
-      uint32_t force_linecount_value;
-      float    force_gain_value;
-      float    force_snap_exp_value;
-      float    force_exp_value;
-      uint32_t force_snap_linecount_value;
-      float    force_snap_gain_value;
-    } u;
-} cam_ez_force_params_t;
-
-typedef enum {
-    CAM_EZTUNE_CMD_STATUS,
-    CAM_EZTUNE_CMD_AEC_ENABLE,
-    CAM_EZTUNE_CMD_AWB_ENABLE,
-    CAM_EZTUNE_CMD_AF_ENABLE,
-    CAM_EZTUNE_CMD_AEC_FORCE_LINECOUNT,
-    CAM_EZTUNE_CMD_AEC_FORCE_GAIN,
-    CAM_EZTUNE_CMD_AEC_FORCE_EXP,
-    CAM_EZTUNE_CMD_AEC_FORCE_SNAP_LC,
-    CAM_EZTUNE_CMD_AEC_FORCE_SNAP_GAIN,
-    CAM_EZTUNE_CMD_AEC_FORCE_SNAP_EXP,
-} cam_eztune_cmd_type_t;
-
-typedef struct {
-  cam_eztune_cmd_type_t   cmd;
-  union {
-    int                   running;
-    int                   aec_enable;
-    int                   awb_enable;
-    int                   af_enable;
-    cam_ez_force_params_t ez_force_param;
-  } u;
-} cam_eztune_cmd_data_t;
-
-
-/*****************************************************************************
- *                 Code for HAL3 data types                                  *
- ****************************************************************************/
-typedef enum {
-    CAM_INTF_METADATA_MAX
-} cam_intf_metadata_type_t;
-
-typedef enum {
-    CAM_INTENT_CUSTOM,
-    CAM_INTENT_PREVIEW,
-    CAM_INTENT_STILL_CAPTURE,
-    CAM_INTENT_VIDEO_RECORD,
-    CAM_INTENT_VIDEO_SNAPSHOT,
-    CAM_INTENT_ZERO_SHUTTER_LAG,
-    CAM_INTENT_MAX,
-} cam_intent_t;
-
-typedef enum {
-    /* Full application control of pipeline. All 3A routines are disabled,
-     * no other settings in android.control.* have any effect */
-    CAM_CONTROL_OFF,
-    /* Use settings for each individual 3A routine. Manual control of capture
-     * parameters is disabled. All controls in android.control.* besides sceneMode
-     * take effect */
-    CAM_CONTROL_AUTO,
-    /* Use specific scene mode. Enabling this disables control.aeMode,
-     * control.awbMode and control.afMode controls; the HAL must ignore those
-     * settings while USE_SCENE_MODE is active (except for FACE_PRIORITY scene mode).
-     * Other control entries are still active. This setting can only be used if
-     * availableSceneModes != UNSUPPORTED. TODO: Should we remove this and handle this
-     * in HAL ?*/
-    CAM_CONTROL_USE_SCENE_MODE,
-    CAM_CONTROL_MAX
-} cam_control_mode_t;
-
-typedef enum {
-    /* Use the android.colorCorrection.transform matrix to do color conversion */
-    CAM_COLOR_CORRECTION_TRANSFORM_MATRIX,
-    /* Must not slow down frame rate relative to raw bayer output */
-    CAM_COLOR_CORRECTION_FAST,
-    /* Frame rate may be reduced by high quality */
-    CAM_COLOR_CORRECTION_HIGH_QUALITY,
-} cam_color_correct_mode_t;
-
-typedef struct {
-    /* 3x3 float matrix in row-major order. each element is in range of (0, 1) */
-    float transform[3][3];
-} cam_color_correct_matrix_t;
-
-#define CAM_FOCAL_LENGTHS_MAX     1
-#define CAM_APERTURES_MAX         1
-#define CAM_FILTER_DENSITIES_MAX  1
-#define CAM_MAX_MAP_HEIGHT        6
-#define CAM_MAX_MAP_WIDTH         6
-
-#define CAM_MAX_TONEMAP_CURVE_SIZE    128
-
-typedef struct {
-    int tonemap_points_cnt;
-
-    /* A 1D array of pairs of floats.
-     * Mapping a 0-1 input range to a 0-1 output range.
-     * The input range must be monotonically increasing with N,
-     * and values between entries should be linearly interpolated.
-     * For example, if the array is: [0.0, 0.0, 0.3, 0.5, 1.0, 1.0],
-     * then the input->output mapping for a few sample points would be:
-     * 0 -> 0, 0.15 -> 0.25, 0.3 -> 0.5, 0.5 -> 0.64 */
-    float tonemap_points[CAM_MAX_TONEMAP_CURVE_SIZE][2];
-} cam_tonemap_curve_t;
-
-typedef enum {
-    OFF,
-    FAST,
-    QUALITY,
-} cam_quality_preference_t;
-
-typedef enum {
-    CAM_FLASH_CTRL_OFF,
-    CAM_FLASH_CTRL_SINGLE,
-    CAM_FLASH_CTRL_TORCH
-} cam_flash_ctrl_t;
-
-typedef struct {
-    uint8_t ae_mode;
-    uint8_t awb_mode;
-    uint8_t af_mode;
-} cam_scene_mode_overrides_t;
-
-typedef struct {
-    int32_t left;
-    int32_t top;
-    int32_t width;
-} cam_crop_region_t;
-
-typedef struct {
-    /* Estimated sharpness for each region of the input image.
-     * Normalized to be between 0 and maxSharpnessMapValue.
-     * Higher values mean sharper (better focused) */
-    int32_t sharpness[CAM_MAX_MAP_WIDTH][CAM_MAX_MAP_HEIGHT];
-} cam_sharpness_map_t;
-
-typedef struct {
     int32_t min_value;
     int32_t max_value;
     int32_t def_value;
@@ -1096,8 +766,6 @@ typedef struct {
 #define CAM_QCOM_FEATURE_SHARPNESS      (1<<7)
 #define CAM_QCOM_FEATURE_VIDEO_HDR      (1<<8)
 #define CAM_QCOM_FEATURE_CAC            (1<<9)
-#define CAM_QCOM_FEATURE_SCALE          (1<<10)
-#define CAM_QCOM_FEATURE_EFFECT         (1<<11)
 
 // Counter clock wise
 typedef enum {
@@ -1122,22 +790,6 @@ typedef enum {
     CAM_ONLINE_REPROCESS_TYPE,    /* online reprocess, frames from running streams */
     CAM_OFFLINE_REPROCESS_TYPE,   /* offline reprocess, frames from external source */
 } cam_reprocess_type_enum_t;
-
-typedef enum {
-    CAM_HDR_MODE_SINGLEFRAME,    /* Single frame HDR mode which does only tone mapping */
-    CAM_HDR_MODE_MULTIFRAME,     /* Multi frame HDR mode which needs two frames with 0.5x and 2x exposure respectively */
-} cam_hdr_mode_enum_t;
-
-typedef struct {
-    uint32_t hdr_enable;
-    uint32_t hdr_need_1x; /* when CAM_QCOM_FEATURE_HDR enabled, indicate if 1x is needed for output */
-    cam_hdr_mode_enum_t hdr_mode;
-} cam_hdr_param_t;
-
-typedef struct {
-    int32_t output_width;
-    int32_t output_height;
-} cam_scale_param_t;
 
 typedef struct {
     /* reprocess feature mask */
@@ -1193,49 +845,10 @@ typedef struct {
 } cam_crop_param_t;
 
 typedef struct {
-    uint8_t trigger;
-    int32_t trigger_id;
-} cam_trigger_t;
-
-typedef struct {
     cam_denoise_param_t denoise;
     cam_crop_param_t crop;
     uint32_t flip;     /* 0 means no flip */
-    uint32_t uv_upsample; /* 0 means no chroma upsampling */
     int32_t sharpness; /* 0 means no sharpness */
 } cam_per_frame_pp_config_t;
-
-typedef enum {
-    CAM_OPT_STAB_OFF,
-    CAM_OPT_STAB_ON,
-    CAM_OPT_STAB_MAX
-} cam_optical_stab_modes_t;
-
-typedef enum {
-    CAM_FILTER_ARRANGEMENT_RGGB,
-    CAM_FILTER_ARRANGEMENT_GRBG,
-    CAM_FILTER_ARRANGEMENT_GBRG,
-    CAM_FILTER_ARRANGEMENT_BGGR,
-
-    /* Sensor is not Bayer; output has 3 16-bit values for each pixel,
-     * instead of just 1 16-bit value per pixel.*/
-    CAM_FILTER_ARRANGEMENT_RGB
-} cam_color_filter_arrangement_t;
-
-typedef enum {
-    CAM_AF_STATE_INACTIVE,
-    CAM_AF_STATE_PASSIVE_SCAN,
-    CAM_AF_STATE_PASSIVE_FOCUSED,
-    CAM_AF_STATE_ACTIVE_SCAN,
-    CAM_AF_STATE_FOCUSED_LOCKED,
-    CAM_AF_STATE_NOT_FOCUSED_LOCKED
-} cam_af_state_t;
-
-typedef enum {
-    CAM_AWB_STATE_INACTIVE,
-    CAM_AWB_STATE_SEARCHING,
-    CAM_AWB_STATE_CONVERGED,
-    CAM_AWB_STATE_LOCKED
-} cam_awb_state_t;
 
 #endif /* __QCAMERA_TYPES_H__ */

@@ -135,7 +135,8 @@ public:
                           mDataCbTimestamp (NULL),
                           mCallbackCookie (NULL),
                           mParent (parent),
-                          mDataQ(releaseNotifications, this) {}
+                          mDataQ(releaseNotifications, this),
+                          mActive(false){}
 
     virtual ~QCameraCbNotifier();
 
@@ -146,6 +147,7 @@ public:
                               void *callbackCookie);
     virtual int32_t startSnapshots();
     virtual void stopSnapshots();
+    virtual void exit();
     static void * cbNotifyRoutine(void * data);
     static void releaseNotifications(void *data, void *user_data);
     static bool matchSnapshotNotifications(void *data, void *user_data);
@@ -159,6 +161,7 @@ private:
 
     QCameraQueue     mDataQ;
     QCameraCmdThread mProcTh;
+    bool             mActive;
 };
 class QCamera2HardwareInterface : public QCameraAllocator,
                                     public QCameraThermalCallback
@@ -421,9 +424,6 @@ private:
     // of whether lens is moving or not.
     bool m_bAutoFocusRunning;
     cam_autofocus_state_t m_currentFocusState;
-
-    // If start_zsl_snapshot is called to notify camera daemon about zsl snapshot
-    bool m_bStartZSLSnapshotCalled;
 
     power_module_t *m_pPowerModule;   // power module
 

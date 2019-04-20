@@ -35,6 +35,9 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 #include <dlfcn.h>
 #include <stdlib.h>
 #include "OMX_Component.h"
+#include <stddef.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define TRUE 1
 #define FALSE 0

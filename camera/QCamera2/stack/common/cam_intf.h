@@ -91,9 +91,9 @@ typedef struct{
   cam_focus_mode_type supported_focus_modes[7];
   uint8_t supported_iso_modes_cnt;
   cam_iso_mode_type supported_iso_modes[7];
-  /* supported auto exposure modes */
-  uint8_t supported_aec_modes_cnt;
-  cam_auto_exposure_mode_type supported_aec_modes[CAM_AEC_MODE_MAX];
+    /* supported auto exposure modes */
+    uint8_t supported_aec_modes_cnt;
+    cam_auto_exposure_mode_type supported_aec_modes[CAM_AEC_MODE_MAX];
   int supported_focus_algos_cnt;
   cam_focus_algorithm_type supported_focus_algos[4];
   int exposure_compensation_min;
@@ -177,9 +177,6 @@ typedef struct {
        offset_x, offset_y, stride, scanline, plane offset */
     cam_stream_buf_plane_info_t buf_planes;
 
-    /* number of stream bufs will be allocated */
-    uint8_t num_bufs;
-
     /* streaming type */
     cam_streaming_mode_t streaming_mode;
     /* num of frames needs to be generated.
@@ -193,8 +190,6 @@ typedef struct {
     cam_stream_reproc_config_t reprocess_config;
 
     cam_stream_parm_buffer_t parm_buf;    /* stream based parameters */
-
-    uint8_t useAVTimer; /*flag to indicate use of AVTimer for TimeStamps*/
 } cam_stream_info_t;
 
 /*****************************************************************************

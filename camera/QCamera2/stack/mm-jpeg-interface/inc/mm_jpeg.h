@@ -38,11 +38,26 @@
 #include "OMX_Core.h"
 #include "OMX_Component.h"
 #include "QOMX_JpegExtensions.h"
+#include "mm_jpeg_ionbuf.h"
 
 #define MM_JPEG_MAX_THREADS 30
 #define MM_JPEG_CIRQ_SIZE 30
 #define MM_JPEG_MAX_SESSION 10
 #define MAX_EXIF_TABLE_ENTRIES 50
+#define MAX_JPEG_SIZE 20000000
+
+/** mm_jpeg_abort_state_t:
+ *  @MM_JPEG_ABORT_NONE: Abort is not issued
+ *  @MM_JPEG_ABORT_INIT: Abort is issued from the client
+ *  @MM_JPEG_ABORT_DONE: Abort is completed
+ *
+ *  State representing the abort state
+ **/
+typedef enum {
+  MM_JPEG_ABORT_NONE,
+  MM_JPEG_ABORT_INIT,
+  MM_JPEG_ABORT_DONE,
+} mm_jpeg_abort_state_t;
 
 typedef struct {
   struct cam_list list;
@@ -85,7 +100,7 @@ typedef struct {
 
   int state_change_pending;      /* flag to indicate if state change is pending */
   OMX_ERRORTYPE error_flag;      /* variable to indicate error during encoding */
-  OMX_BOOL abort_flag;      /* variable to indicate abort during encoding */
+  mm_jpeg_abort_state_t abort_state; /* variable to indicate abort during encoding */
 
   /* OMX related */
   OMX_HANDLETYPE omx_handle;                      /* handle to omx engine */
@@ -105,6 +120,7 @@ typedef struct {
   pthread_cond_t cond;
 
   QEXIF_INFO_DATA exif_info_all[MAX_EXIF_TABLE_ENTRIES];  //all exif tags for JPEG encoder
+  int total_entries;
 
   mm_jpeg_cirq_t cb_q;
   int32_t ebd_count;
@@ -120,6 +136,9 @@ typedef struct {
   int job_hist;
 
   OMX_BOOL encoding;
+
+  buffer_t work_buffer;
+
 } mm_jpeg_job_session_t;
 
 typedef struct {
@@ -158,6 +177,7 @@ typedef struct mm_jpeg_obj_t {
   pthread_mutex_t job_lock;                       /* job lock */
   mm_jpeg_job_cmd_thread_t job_mgr;               /* job mgr thread including todo_q*/
   mm_jpeg_queue_t ongoing_job_q;                  /* queue for ongoing jobs */
+  buffer_t ionBuffer;
 } mm_jpeg_obj;
 
 extern int32_t mm_jpeg_init(mm_jpeg_obj *my_obj);

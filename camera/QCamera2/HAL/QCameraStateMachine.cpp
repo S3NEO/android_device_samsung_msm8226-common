@@ -558,9 +558,18 @@ int32_t QCameraStateMachine::procEvtPreviewStoppedState(qcamera_sm_evt_enum_t ev
             }
         }
         break;
+    case QCAMERA_SM_EVT_SNAPSHOT_DONE:
+        {
+            // No ops, but need to notify
+            ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalEvtResult(&result);
+        }
+       break;
     case QCAMERA_SM_EVT_EVT_INTERNAL:
     case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
-    case QCAMERA_SM_EVT_SNAPSHOT_DONE:
     default:
         ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
         break;
@@ -838,9 +847,18 @@ int32_t QCameraStateMachine::procEvtPreviewReadyState(qcamera_sm_evt_enum_t evt,
             }
         }
         break;
+    case QCAMERA_SM_EVT_SNAPSHOT_DONE:
+        {
+            // No ops, but need to notify
+            ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalEvtResult(&result);
+        }
+       break;
     case QCAMERA_SM_EVT_EVT_INTERNAL:
     case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
-    case QCAMERA_SM_EVT_SNAPSHOT_DONE:
     case QCAMERA_SM_EVT_THERMAL_NOTIFY:
     default:
         ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
@@ -1203,8 +1221,17 @@ int32_t QCameraStateMachine::procEvtPreviewingState(qcamera_sm_evt_enum_t evt,
                     *(qcamera_thermal_level_enum_t *)&payload);
         }
         break;
-    case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
     case QCAMERA_SM_EVT_SNAPSHOT_DONE:
+        {
+            // No ops, but need to notify
+            ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalEvtResult(&result);
+        }
+       break;
+    case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
     default:
         ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
         break;
@@ -1273,6 +1300,9 @@ int32_t QCameraStateMachine::procEvtPrepareSnapshotState(qcamera_sm_evt_enum_t e
             qcamera_sm_internal_evt_payload_t *internal_evt =
                 (qcamera_sm_internal_evt_payload_t *)payload;
             switch (internal_evt->evt_type) {
+            case QCAMERA_INTERNAL_EVT_FOCUS_UPDATE:
+                rc = m_parent->processAutoFocusEvent(internal_evt->focus_data);
+                break;
             case QCAMERA_INTERNAL_EVT_PREP_SNAPSHOT_DONE:
                 ALOGI("%s: Received QCAMERA_INTERNAL_EVT_PREP_SNAPSHOT_DONE event",
                     __func__);
@@ -1309,9 +1339,18 @@ int32_t QCameraStateMachine::procEvtPrepareSnapshotState(qcamera_sm_evt_enum_t e
             }
         }
         break;
+    case QCAMERA_SM_EVT_SNAPSHOT_DONE:
+        {
+            // No ops, but need to notify
+            ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalEvtResult(&result);
+        }
+       break;
     case QCAMERA_SM_EVT_THERMAL_NOTIFY:
     case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
-    case QCAMERA_SM_EVT_SNAPSHOT_DONE:
     default:
         ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
         break;
@@ -1830,6 +1869,20 @@ int32_t QCameraStateMachine::procEvtRecordingState(qcamera_sm_evt_enum_t evt,
             m_parent->signalAPIResult(&result);
         }
         break;
+    case QCAMERA_SM_EVT_STOP_PREVIEW:
+        {
+            rc = m_parent->stopRecording();
+            m_state = QCAMERA_SM_STATE_PREVIEWING;
+
+            rc = m_parent->stopPreview();
+            m_state = QCAMERA_SM_STATE_PREVIEW_STOPPED;
+
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalAPIResult(&result);
+        }
+        break;
     case QCAMERA_SM_EVT_RELEASE_RECORIDNG_FRAME:
         {
             rc = m_parent->releaseRecordingFrame((const void *)payload);
@@ -1866,7 +1919,6 @@ int32_t QCameraStateMachine::procEvtRecordingState(qcamera_sm_evt_enum_t evt,
     case QCAMERA_SM_EVT_CANCEL_PICTURE:
     case QCAMERA_SM_EVT_START_PREVIEW:
     case QCAMERA_SM_EVT_START_NODISPLAY_PREVIEW:
-    case QCAMERA_SM_EVT_STOP_PREVIEW:
     case QCAMERA_SM_EVT_RELEASE:
         {
             ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
@@ -1914,8 +1966,17 @@ int32_t QCameraStateMachine::procEvtRecordingState(qcamera_sm_evt_enum_t evt,
                     *(qcamera_thermal_level_enum_t *)&payload);
         }
         break;
-    case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
     case QCAMERA_SM_EVT_SNAPSHOT_DONE:
+        {
+            // No ops, but need to notify
+            ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalEvtResult(&result);
+        }
+       break;
+    case QCAMERA_SM_EVT_JPEG_EVT_NOTIFY:
     default:
         ALOGE("%s: cannot handle evt(%d) in state(%d)", __func__, evt, m_state);
         break;
@@ -2152,10 +2213,26 @@ int32_t QCameraStateMachine::procEvtVideoPicTakingState(qcamera_sm_evt_enum_t ev
             m_parent->signalAPIResult(&result);
         }
         break;
+    case QCAMERA_SM_EVT_STOP_PREVIEW:
+        {
+            rc = m_parent->cancelLiveSnapshot();
+            m_state = QCAMERA_SM_STATE_RECORDING;
+
+            rc = m_parent->stopRecording();
+            m_state = QCAMERA_SM_STATE_PREVIEWING;
+
+            rc = m_parent->stopPreview();
+            m_state = QCAMERA_SM_STATE_PREVIEW_STOPPED;
+
+            result.status = rc;
+            result.request_api = evt;
+            result.result_type = QCAMERA_API_RESULT_TYPE_DEF;
+            m_parent->signalAPIResult(&result);
+        }
+        break;
     case QCAMERA_SM_EVT_START_RECORDING:
     case QCAMERA_SM_EVT_START_PREVIEW:
     case QCAMERA_SM_EVT_START_NODISPLAY_PREVIEW:
-    case QCAMERA_SM_EVT_STOP_PREVIEW:
     case QCAMERA_SM_EVT_TAKE_PICTURE:
     case QCAMERA_SM_EVT_RELEASE:
         {
@@ -2458,9 +2535,15 @@ int32_t QCameraStateMachine::procEvtPreviewPicTakingState(qcamera_sm_evt_enum_t 
         break;
     case QCAMERA_SM_EVT_START_RECORDING:
         {
-            rc = m_parent->stopRecording();
-            if (rc == NO_ERROR) {
-                m_state = QCAMERA_SM_STATE_VIDEO_PIC_TAKING;
+            if (m_parent->isZSLMode()) {
+                ALOGE("%s: cannot handle evt(%d) in state(%d) in ZSL mode",
+                      __func__, evt, m_state);
+                rc = INVALID_OPERATION;
+            } else {
+                rc = m_parent->startRecording();
+                if (rc == NO_ERROR) {
+                    m_state = QCAMERA_SM_STATE_VIDEO_PIC_TAKING;
+                }
             }
             result.status = rc;
             result.request_api = evt;

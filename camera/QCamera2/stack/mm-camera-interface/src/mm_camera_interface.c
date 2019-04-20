@@ -1286,12 +1286,13 @@ uint8_t get_num_of_cameras()
             break;
         }
 
-        if(strncmp(mdev_info.model, "msm_camera", sizeof(mdev_info.model)) != 0) {
+        if(strncmp(mdev_info.model, MSM_CAMERA_NAME, sizeof(mdev_info.model)) != 0) {
             close(dev_fd);
             dev_fd = 0;
             continue;
         }
 
+        num_entities = 1;
         while (1) {
             struct media_entity_desc entity;
             memset(&entity, 0, sizeof(entity));
@@ -1302,7 +1303,7 @@ uint8_t get_num_of_cameras()
                 rc = 0;
                 break;
             }
-            if(entity.type == SAMSUNG_MAGIC_ENTITY_TYPE && entity.group_id == SAMSUNG_MAGIC_GROUP_ID) {
+            if(entity.type == MEDIA_ENT_T_DEVNODE_V4L && entity.group_id == QCAMERA_VNODE_GROUP_ID) {
                 strncpy(g_cam_ctrl.video_dev_name[num_cameras],
                      entity.name, sizeof(entity.name));
                 break;
