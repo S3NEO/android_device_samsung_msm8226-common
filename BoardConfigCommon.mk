@@ -53,3 +53,6 @@ include device/samsung/msm8226-common/nfc/pn547/board.mk
 
 # SELinux
 include device/samsung/msm8226-common/sepolicy/sepolicy.mk
+
+# Inherit from the proprietary version
+-include vendor/samsung/msm8226-common/BoardConfigVendor.mk
