@@ -24,13 +24,6 @@ etc/firmware/a330_pm4.fw
 etc/firmware/a330_pfp.fw
 etc/firmware/a330_pm4.fw
 
-# GPS HAL (Samsung I9301IXCUARA1_I9301IXXUAPG1)
-vendor/lib/hw/gps.msm8226.so
-vendor/lib/libloc_core.so 
-vendor/lib/libloc_eng.so 
-vendor/lib/libgps.utils.so
-vendor/lib/liblocationservice.so
-
 # GPS (OnePlus bacon - lineage-14.1-20170807-nightly-bacon-signed.zip)
 vendor/lib/libloc_api_v02.so|9a8401afc86b54e73aa29995f228fd0243cee793
 vendor/lib/libloc_ds_api.so|ccce9d3c3fa4cadafd13b63c90d3ab8c115dd7b0
