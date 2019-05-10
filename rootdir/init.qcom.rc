@@ -588,16 +588,6 @@ service charger /sbin/healthd -c
     critical
     seclabel u:r:charger:s0
 
-service ds_fmc_appd /vendor/bin/ds_fmc_appd -p "rmnet0" -D
-    class late_start
-    user root
-    group radio wifi inet
-    disabled
-    oneshot
-
-on property:persist.data.ds_fmc_app.mode=1
-    start ds_fmc_appd
-
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     class late_start
     user bluetooth
