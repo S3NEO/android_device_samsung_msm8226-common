@@ -55,9 +55,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     audio.offload.gapless.enabled=false \
     av.offload.enable=true
 
-PRODUCT_PACKAGES += \
-    libimx175_shim
-
 # Security
 PRODUCT_PACKAGES += \
     android.hardware.weaver@1.0
