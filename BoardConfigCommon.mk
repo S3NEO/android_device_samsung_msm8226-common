@@ -48,9 +48,6 @@ TARGET_BOOTANIMATION_HALF_RES := true
 # Properties (reset them here, include more in device if needed)
 TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
 
-# NFC
-include device/samsung/msm8226-common/nfc/pn547/board.mk
-
 # SELinux
 include device/samsung/msm8226-common/sepolicy/sepolicy.mk
 
