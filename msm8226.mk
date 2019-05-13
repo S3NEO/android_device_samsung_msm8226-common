@@ -231,13 +231,7 @@ PRODUCT_PACKAGES += \
 
 # RenderScript HAL
 PRODUCT_PACKAGES += \
-    android.hardware.renderscript@1.0-impl    
-
-# Lights
-PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-impl \
-    android.hardware.light@2.0-service \
-    lights.MSM8226
+    android.hardware.renderscript@1.0-impl
 
 # Wifi
 PRODUCT_PACKAGES += \
