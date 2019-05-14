@@ -1,0 +1,3 @@
+# Architecture
+TARGET_CPU_VARIANT := krait 
+TARGET_CPU_MEMCPY_BASE_OPT_DISABLE := true
