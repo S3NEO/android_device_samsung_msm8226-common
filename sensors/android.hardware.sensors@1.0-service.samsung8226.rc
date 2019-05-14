@@ -1,4 +1,4 @@
-service sensors-hal-1-0 /vendor/bin/hw/android.hardware.sensors@1.0-service.s3ve3g
+service sensors-hal-1-0 /vendor/bin/hw/android.hardware.sensors@1.0-service.samsung8226
     class hal
     user root
     group system input wakelock

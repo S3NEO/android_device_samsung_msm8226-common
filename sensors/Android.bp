@@ -1,15 +1,143 @@
+
 cc_library_static {
-    name: "multihal-samsung",
+    name: "multihal-samsung8226",
     vendor: true,
     srcs: [
         "multihal.cpp",
-        "SensorEventQueue.cpp"
+        "SensorEventQueue.cpp",
+    ],
+    header_libs: [
+        "libhardware_headers",
     ],
     shared_libs: [
         "liblog",
         "libcutils",
         "libutils",
-        "libdl"
+        "libdl",
     ],
     export_include_dirs: ["."],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}
+
+cc_library_shared {
+    name: "android.hardware.sensors@1.0-impl.samsung8226",
+    defaults: ["hidl_defaults"],
+    proprietary: true,
+    relative_install_path: "hw",
+    srcs: ["Sensors.cpp"],
+    shared_libs: [
+        "liblog",
+        "libcutils",
+        "libhardware",
+        "libbase",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "android.hardware.sensors@1.0",
+    ],
+    static_libs: [
+        "android.hardware.sensors@1.0-convert",
+        "multihal-samsung8226",
+    ],
+    local_include_dirs: ["include/sensors"],
+}
+
+cc_binary {
+    name: "android.hardware.sensors@1.0-service.samsung8226",
+    defaults: ["hidl_defaults"],
+    relative_install_path: "hw",
+    vendor: true,
+    init_rc: ["android.hardware.sensors@1.0-service.samsung8226.rc"],
+    srcs: ["service.cpp"],
+
+    shared_libs: [
+        "liblog",
+        "libcutils",
+        "libdl",
+        "libbase",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhwbinder",
+        "android.hardware.sensors@1.0",
+    ],
+    arch: {
+cc_library_static {
+    name: "multihal-samsung8226",
+    vendor: true,
+    srcs: [
+        "multihal.cpp",
+        "SensorEventQueue.cpp",
+    ],
+    header_libs: [
+        "libhardware_headers",
+    ],
+    shared_libs: [
+        "liblog",
+        "libcutils",
+        "libutils",
+        "libdl",
+    ],
+    export_include_dirs: ["."],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}
+
+cc_library_shared {
+    name: "android.hardware.sensors@1.0-impl.samsung8226",
+    defaults: ["hidl_defaults"],
+    proprietary: true,
+    relative_install_path: "hw",
+    srcs: ["Sensors.cpp"],
+    shared_libs: [
+        "liblog",
+        "libcutils",
+        "libhardware",
+        "libbase",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "android.hardware.sensors@1.0",
+    ],
+    static_libs: [
+        "android.hardware.sensors@1.0-convert",
+        "multihal-samsung8226",
+    ],
+    local_include_dirs: ["include/sensors"],
+}
+
+cc_binary {
+    name: "android.hardware.sensors@1.0-service.samsung8226",
+    defaults: ["hidl_defaults"],
+    relative_install_path: "hw",
+    vendor: true,
+    init_rc: ["android.hardware.sensors@1.0-service.samsung8226.rc"],
+    srcs: ["service.cpp"],
+
+    shared_libs: [
+        "liblog",
+        "libcutils",
+        "libdl",
+        "libbase",
+        "libutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libhwbinder",
+        "android.hardware.sensors@1.0",
+    ],
+    arch: {
+        arm: {
+            cflags: ["-DARCH_ARM_32"],
+        },
+    },
+}
+        arm: {
+            cflags: ["-DARCH_ARM_32"],
+        },
+    },
 }
