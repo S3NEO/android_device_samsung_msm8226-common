@@ -1,5 +1,6 @@
 service sensors-hal-1-0 /vendor/bin/hw/android.hardware.sensors@1.0-service.samsung8226
     class hal
-    user root
+    user system
     group system input wakelock
-    capabilities BLOCK_SUSPEND SYS_NICE
+    capabilities BLOCK_SUSPEND
+    rlimit rtprio 10 10
