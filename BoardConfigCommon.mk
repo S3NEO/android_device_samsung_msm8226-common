@@ -16,7 +16,7 @@
 -include device/samsung/qcom-common/BoardConfigCommon.mk
 
 include device/samsung/msm8226-common/board/*.mk
-    
+
 # Fonts
 EXTENDED_FONT_FOOTPRINT := true
 

@@ -74,6 +74,8 @@ on fs
     # Kickstart the Wireless subsystem
     write /dev/wcnss_wlan 1
     
+    /system/bin/sh /system/etc/debug_log.sh
+    
     # Adaptive LMK
     write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
     write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 53059    
