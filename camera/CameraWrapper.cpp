@@ -34,6 +34,9 @@
 #include <utils/String8.h>
 #include <utils/threads.h>
 
+#define BACK_CAMERA_ID 0
+#define FRONT_CAMERA_ID 1
+
 #define OPEN_RETRIES    10
 #define OPEN_RETRY_MSEC 40
 
@@ -167,6 +170,10 @@ static char* camera_fixup_getparams(int id, const char* settings) {
     ALOGV("%s: fixed parameters:", __FUNCTION__);
     params.dump();
 #endif
+    
+    if (id == BACK_CAMERA_ID) {
+        params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
+    }    
 
     String8 strParams = params.flatten();
     char* ret = strdup(strParams.string());
