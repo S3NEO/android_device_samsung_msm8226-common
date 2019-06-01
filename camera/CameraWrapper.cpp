@@ -170,6 +170,10 @@ static char* camera_fixup_getparams(int id, const char* settings) {
     ALOGV("%s: fixed parameters:", __FUNCTION__);
     params.dump();
 #endif
+    
+    if (id == BACK_CAMERA_ID) {
+        params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
+    }    
 
     String8 strParams = params.flatten();
     char* ret = strdup(strParams.string());
