@@ -1,0 +1,1 @@
+allow sysinit proc:file read;

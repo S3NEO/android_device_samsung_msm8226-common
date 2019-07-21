@@ -8,3 +8,5 @@ allow mediaserver sysfs_camera:file { getattr open read };
 allow mediaserver camera_device:chr_file rw_file_perms;
 allow mediaserver audio_device:chr_file rw_file_perms;
 allow mediaserver system_file:file execmod;
+
+allow mediaserver system_data_file:sock_file write;

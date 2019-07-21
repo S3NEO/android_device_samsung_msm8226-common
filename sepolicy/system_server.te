@@ -5,3 +5,7 @@ allow system_server sysfs_display:file rw_file_perms;;
 allow system_server sysfs_vibeamp:dir search;
 allow system_server sysfs_vibeamp:file rw_file_perms;
 allow system_server wifi_data_file:sock_file unlink;
+allow system_server persist_data_file:dir search;
+allow system_server system_file:file execmod;
+allow system_server persist_file:dir read;
+allow system_server unlabeled:file unlink;
