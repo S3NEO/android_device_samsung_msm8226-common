@@ -207,9 +207,6 @@ PRODUCT_PACKAGES += \
     libcurl \
     libwcnss_qmi \
     wcnss_service
-    
-# Get non-open-source specific aspects
-$(call inherit-product-if-exists, vendor/samsung/msm8226-common/msm8226-common-vendor.mk)
 
 # Inherit from qcom-common
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)

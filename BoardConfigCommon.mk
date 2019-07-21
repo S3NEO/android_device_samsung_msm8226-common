@@ -25,6 +25,3 @@ TARGET_SYSTEM_PROP := device/samsung/msm8226-common/system.prop
 
 # SELinux
 include device/samsung/msm8226-common/sepolicy/sepolicy.mk
-
-# Inherit from the proprietary version
--include vendor/samsung/msm8226-common/BoardConfigVendor.mk
