@@ -23,6 +23,10 @@
     <!-- Should the pinner service pin the Home application? -->
     <bool name="config_pinnerHomeApp">true</bool>
 
+    <!-- Should the pinner service pin the Camera application? -->
+    <bool name="config_pinnerCameraApp">true</bool>
+    <bool name="config_setColorTransformAccelerated">false</bool>
+    
     <!-- Values for GPS configuration -->
     <string-array translatable="false" name="config_gpsParameters">
         <item>XTRA_SERVER_1=https://xtrapath1.izatcloud.net/xtra3grc.bin</item>
@@ -56,7 +60,7 @@
         <item>"/data/dalvik-cache/arm64/system@priv-app@SystemUI@SystemUI.apk@classes.vdex"</item>
         <item>"/system/lib/libsurfaceflinger.so"</item>
     </string-array>
-
+    
     <!-- Whether to allow process with media UID to access CameraServiceProxy -->
     <bool name="config_allowMediaUidForCameraServiceProxy">true</bool>
 </resources>
