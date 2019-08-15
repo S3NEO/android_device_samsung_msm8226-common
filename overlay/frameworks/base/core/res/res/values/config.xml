@@ -35,6 +35,9 @@
         <item>LPP_PROFILE=0</item>
     </string-array>
 
+    <!-- Operating voltage for bluetooth controller. 0 by default-->
+    <integer translatable="false" name="config_bluetooth_operating_voltage_mv">3300</integer>    
+    
     <!-- Integer indicating wpa_supplicant scan interval in milliseconds -->
     <integer translatable="false" name="config_wifi_supplicant_scan_interval">40000</integer>
 
