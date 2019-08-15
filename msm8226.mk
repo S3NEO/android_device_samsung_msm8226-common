@@ -132,10 +132,6 @@ PRODUCT_PACKAGES += \
     libOmxVenc \
     libstagefrighthw
 
-# Power
-PRODUCT_PACKAGES += \
-    power.msm8226
-
 # Wifi
 PRODUCT_PACKAGES += \
     dhcpcd.conf \
