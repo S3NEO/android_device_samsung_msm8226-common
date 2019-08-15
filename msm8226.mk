@@ -42,7 +42,8 @@ PRODUCT_COPY_FILES += \
 
 # Ramdisk
 PRODUCT_PACKAGES += \
-    init.qcom.bt.sh
+    init.qcom.bt.sh \
+    init.ril.sh
 
 PRODUCT_PACKAGES += \
     init.qcom.power.rc \
