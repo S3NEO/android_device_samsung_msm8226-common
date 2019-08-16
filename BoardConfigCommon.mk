@@ -131,6 +131,10 @@ TARGET_HAS_LEGACY_POWER_STATS := true
 TARGET_HAS_NO_WIFI_STATS := true
 TARGET_USES_INTERACTION_BOOST := true
 
+# Shims
+TARGET_LD_SHIM_LIBS += \
+    /system/lib/libcrypto.so|libboringssl-compat.so
+
 # Time services
 BOARD_USES_QC_TIME_SERVICES := true 
 
