@@ -100,12 +100,6 @@ PRODUCT_PACKAGES += \
     libxml2 \
     Snap
 
-# CRDA
-PRODUCT_PACKAGES += \
-    crda \
-    linville.key.pub.pem \
-    regdbdump \
-    regulatory.bin
 
 # Display
 PRODUCT_PACKAGES += \
