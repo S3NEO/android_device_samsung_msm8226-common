@@ -81,13 +81,14 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.boot-dex2oat-threads=4 \
+    dalvik.vm.dex2oat-swap=false \
     dalvik.vm.checkjni=false \
     dalvik.vm.dex2oat-flags=--no-watch-dog \
     dalvik.vm.dex2oat-threads=4 \
     dalvik.vm.image-dex2oat-threads=4 \
     dalvik.vm.verify-bytecode=false \
     persist.sys.purgeable_assets=1
-    
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=/vendor/lib/libqc-opt.so        
 
