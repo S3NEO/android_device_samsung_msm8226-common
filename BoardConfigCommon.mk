@@ -120,6 +120,9 @@ include device/samsung/msm8226-common/sepolicy/sepolicy.mk
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_msm
 
+# Legacy blobs support
+TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
+
 # LineageHW
 BOARD_HARDWARE_CLASS += device/samsung/msm8226-common/lineagehw
 
