@@ -594,7 +594,7 @@ on charger
 
 # Services begin here
 
-service adsprpcd /system/bin/adsprpcd
+service adsprpcd /vendor/bin/adsprpcd
     class main
     user media
     group media
@@ -604,7 +604,7 @@ service charger /sbin/healthd -c
     critical
     seclabel u:r:charger:s0
 
-service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
+service ds_fmc_appd /vendor/bin/ds_fmc_appd -p "rmnet0" -D
     class late_start
     user root
     group radio wifi inet
@@ -627,37 +627,37 @@ on property:bluetooth.hciattach=true
 on property:bluetooth.hciattach=false
     setprop bluetooth.status off
 
-service irsc_util /system/bin/irsc_util "/vendor/etc/sec_config"
+service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class main
     user root
     oneshot
 
-service mpdecision /system/bin/mpdecision --avg_comp
+service mpdecision /vendor/bin/mpdecision --avg_comp
     class main
     user root
     group root readproc
 
-service qcamerasvr /system/bin/mm-qcamera-daemon
+service qcamerasvr /vendor/bin/mm-qcamera-daemon
     class main
     user camera
     group camera system inet input graphics bluetooth
 
-service qmuxd /system/bin/qmuxd
+service qmuxd /vendor/bin/qmuxd
     class core
     user radio
     group radio audio bluetooth gps diag oem_2950 log
 
-service qseecomd /system/bin/qseecomd
+service qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
 
-service rfs_access /system/bin/rfs_access
+service rfs_access /vendor/bin/rfs_access
     class core
     user system
     group system net_raw
 
-service rmt_storage /system/bin/rmt_storage
+service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
     group system wakelock
@@ -673,7 +673,7 @@ on property:persist.sys.ssr.restart_level=1
 on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
     
-service thermal-engine /system/bin/thermal-engine -c /vendor/etc/thermal-engine-8226.conf
+service thermal-engine /vendor/bin/thermal-engine -c /vendor/etc/thermal-engine-8226.conf
    class main
    user root
    socket thermal-send-client stream 0666 system system
@@ -681,7 +681,7 @@ service thermal-engine /system/bin/thermal-engine -c /vendor/etc/thermal-engine-
    socket thermal-recv-passive-client stream 0666 system system
    group root   
 
-service time_daemon /system/bin/time_daemon
+service time_daemon /vendor/bin/time_daemon
     class late_start
     user root
     group root
