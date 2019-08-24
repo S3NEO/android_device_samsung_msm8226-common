@@ -61,6 +61,4 @@
         <item>"/system/lib/libsurfaceflinger.so"</item>
     </string-array>
     
-    <!-- Whether to allow process with media UID to access CameraServiceProxy -->
-    <bool name="config_allowMediaUidForCameraServiceProxy">true</bool>
 </resources>
