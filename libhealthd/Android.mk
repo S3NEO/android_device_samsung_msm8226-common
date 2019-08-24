@@ -18,6 +18,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := healthd_board_default.cpp
 LOCAL_MODULE := libhealthd.msm8226
-LOCAL_C_INCLUDES := system/core/healthd bootable/recovery
+LOCAL_C_INCLUDES := system/core/healthd/include bootable/recovery/minui/include
+LOCAL_STATIC_LIBRARIES := libutils libbase libbinder
 include $(BUILD_STATIC_LIBRARY)
 
