@@ -27,12 +27,12 @@
 #define LOG_TAG "CameraWrapper"
 #include <cutils/log.h>
 
+#include <utils/threads.h>
+#include <utils/String8.h>
+#include <hardware/hardware.h>
+#include <hardware/camera.h>
 #include <camera/Camera.h>
 #include <camera/CameraParameters.h>
-#include <hardware/camera.h>
-#include <hardware/hardware.h>
-#include <utils/String8.h>
-#include <utils/threads.h>
 
 #define BACK_CAMERA_ID 0
 #define FRONT_CAMERA_ID 1
@@ -76,7 +76,7 @@ camera_module_t HAL_MODULE_INFO_SYM = {
             .hal_api_version = HARDWARE_HAL_API_VERSION,
             .id = CAMERA_HARDWARE_MODULE_ID,
             .name = "Samsung msm8226 Camera Wrapper",
-            .author = "The LineageOS Project",
+            .author = "The CyanogenMod Project",
             .methods = &camera_module_methods,
             .dso = NULL,     /* remove compilation warnings */
             .reserved = {0}, /* remove compilation warnings */
@@ -264,8 +264,9 @@ static void camera_set_callbacks(struct camera_device* device, camera_notify_cal
     ALOGV("%s->%08X->%08X", __FUNCTION__, (uintptr_t)device,
           (uintptr_t)(((wrapper_camera_device_t*)device)->vendor));
 
-    VENDOR_CALL(device, set_callbacks, camera_notify_cb, camera_data_cb,camera_data_cb_timestamp, camera_get_memory, user);
-
+    VENDOR_CALL(device, set_callbacks, camera_notify_cb, camera_data_cb,
+            camera_data_cb_timestamp, camera_get_memory, user);
+    
 }
 
 static void camera_enable_msg_type(struct camera_device* device, int32_t msg_type) {
@@ -474,13 +475,14 @@ static int camera_send_command(struct camera_device* device, int32_t cmd, int32_
 
 static void camera_release(struct camera_device* device) {
     wrapper_camera_device_t* wrapper_dev = NULL;
-    
+
     if (!device) return;
     
-    wrapper_dev = (wrapper_camera_device_t*) device; 
-    
+    wrapper_dev = (wrapper_camera_device_t*) device;
+
+
     ALOGV("%s->%08X->%08X", __FUNCTION__, (uintptr_t)device,
-          (uintptr_t)(((wrapper_camera_device_t*)device)->vendor));    
+            (uintptr_t)(((wrapper_camera_device_t*)device)->vendor));
 
     VENDOR_CALL(device, release);
     
@@ -590,7 +592,7 @@ static int camera_device_open(const hw_module_t* module, const char* name, hw_de
         memset(camera_device, 0, sizeof(*camera_device));
         camera_device->camera_released = false;
         camera_device->id = cameraid;
-
+        
         int retries = OPEN_RETRIES;
         bool retry;
         do {
@@ -605,6 +607,7 @@ static int camera_device_open(const hw_module_t* module, const char* name, hw_de
             ALOGE("vendor camera open fail");
             goto fail;
         }
+        
         ALOGV("%s: got vendor camera device 0x%08X", __FUNCTION__,
               (uintptr_t)(camera_device->vendor));
 

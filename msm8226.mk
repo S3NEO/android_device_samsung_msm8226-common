@@ -1,5 +1,5 @@
-# Copyright (C) 2014 The CyanogenMod Project
-# Copyright (C) 2017-2019 The LineageOS Project
+# Copyright (C) 2012 The CyanogenMod Project
+# Copyright (C) 2017-2018 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-
 # Overlays
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-lineage
+DEVICE_PACKAGE_OVERLAYS += device/samsung/msm8226-common/overlay
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -41,36 +38,30 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.voip.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.software.midi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.midi.xml
 
-# Ramdisk
-PRODUCT_PACKAGES += \
-    init.qcom.bt.sh \
-    init.ril.sh
-
-PRODUCT_PACKAGES += \
-    init.qcom.power.rc \
-    init.qcom.rc \
-    init.qcom.usb.rc \
-    init.recovery.qcom.rc \
-    ueventd.qcom.rc
-    
 # System properties
 PRODUCT_PROPERTY_OVERRIDES += \
     audio.offload.buffer.size.kb=32 \
     audio.offload.gapless.enabled=false \
-    av.offload.enable=true \
-    ro.af.client_heap_size_kbyte=7168 \
-    persist.vendor.audio.hw.binder.size_kbyte=1024
+    av.offload.enable=true\
+    ro.af.client_heap_size_kbyte=7168
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.opengles.version=196608 \
-    debug.hwui.use_buffer_age=false
-    
+    ro.opengles.version=196608
+
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.graphics.vulkan.disable=true
-    
+
 PRODUCT_PROPERTY_OVERRIDES += \
-    persist.timed.enable=true    
-    
+    persist.rild.nitz_plmn="" \
+    persist.rild.nitz_long_ons_0="" \
+    persist.rild.nitz_long_ons_1="" \
+    persist.rild.nitz_long_ons_2="" \
+    persist.rild.nitz_long_ons_3="" \
+    persist.rild.nitz_short_ons_0="" \
+    persist.rild.nitz_short_ons_1="" \
+    persist.rild.nitz_short_ons_2="" \
+    persist.rild.nitz_short_ons_3=""
+
 PRODUCT_PROPERTY_OVERRIDES += \
     dalvik.vm.heapstartsize=8m \
     dalvik.vm.heapgrowthlimit=192m \
@@ -90,45 +81,31 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.purgeable_assets=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.extension_library=/vendor/lib/libqc-opt.so        
+    persist.timed.enable=true
 
 # Audio
 PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
     android.hardware.audio.effect@2.0-impl \
+    audio_policy.msm8226 \
     audio.a2dp.default \
     audio.primary.msm8226 \
     audio.r_submix.default \
-    audio.usb.default
-
-PRODUCT_PACKAGES += \
+    audio.usb.default \
     libaudio-resampler \
-    libqcompostprocbundle \
     libqcomvisualizer \
+    libqcompostprocbundle \
     libqcomvoiceprocessing \
     tinymix
-    
+
 # Bluetooth
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl \
-    libbt-vendor    
+    libbt-vendor
 
 # Boot animation
 TARGET_BOOTANIMATION_HALF_RES := true
 
-# Camera
-PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl-legacy \
-    camera.device@1.0-impl-legacy \
-    libboringssl-compat \
-    camera.msm8226 \
-    libxml2 \
-    Snap
-
-# Charger
-PRODUCT_PACKAGES += \
-    charger_res_images
-    
 # Display
 PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@2.0-impl \
@@ -164,18 +141,13 @@ PRODUCT_COPY_FILES += \
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-impl
-    
-# Keystore
-PRODUCT_PACKAGES += \
-    keystore.msm8226
 
 # Media
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml  \
-    frameworks/av/media/libstagefright/data/media_codecs_google_video_le.xml:system/etc/media_codecs_google_video_le.xml  \
-    $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml
+    device/samsung/msm8226-common/configs/media_codecs.xml:system/etc/media_codecs.xml
 
 # OMX
 PRODUCT_PACKAGES += \
@@ -188,24 +160,40 @@ PRODUCT_PACKAGES += \
     libOmxVdec \
     libOmxVenc \
     libstagefrighthw
-    
+
+# Offmode charger
+PRODUCT_PACKAGES += \
+    lineage_charger_res_images
+
 # Power HAL
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.0-service-qti    
-    
+    android.hardware.power@1.0-service-qti
+
 # Preopt
 PRODUCT_DEXPREOPT_SPEED_APPS += \
     Settings \
-    SystemUI    
+    SystemUI 
+
+# Ramdisk
+PRODUCT_PACKAGES += \
+    init.qcom.bt.sh \
+    init.ril.sh
+
+PRODUCT_PACKAGES += \
+    init.qcom.power.rc \
+    init.qcom.rc \
+    init.qcom.usb.rc \
+    init.recovery.qcom.rc \
+    ueventd.qcom.rc
+
+# RenderScript HAL
+PRODUCT_PACKAGES += \
+    android.hardware.renderscript@1.0-impl
 
 # Seccomp
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
     $(LOCAL_PATH)/seccomp/mediaextractor.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
-
-# RenderScript HAL
-PRODUCT_PACKAGES += \
-    android.hardware.renderscript@1.0-impl
 
 # Sensors
 PRODUCT_PACKAGES += \
@@ -217,21 +205,28 @@ PRODUCT_PACKAGES += \
 
 # Wifi
 PRODUCT_PACKAGES += \
+    android.hardware.wifi@1.0-service \
     dhcpcd.conf \
     hostapd \
     wificond \
     wpa_supplicant \
     wpa_supplicant.conf \
-    libwpa_client \
-    android.hardware.wifi@1.0-service
+    libwpa_client
 
 PRODUCT_PACKAGES += \
     libcurl \
     libwcnss_qmi \
     wcnss_service
 
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/wifi/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf \
+    $(LOCAL_PATH)/configs/wifi/p2p_supplicant_overlay.conf:system/etc/wifi/p2p_supplicant_overlay.conf \
+    $(LOCAL_PATH)/configs/wifi/hostapd_default.conf:system/etc/hostapd/hostapd_default.conf \
+    $(LOCAL_PATH)/prima/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
+    $(LOCAL_PATH)/prima/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
+    $(LOCAL_PATH)/prima/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/samsung/msm8226-common/msm8226-common-vendor.mk)
-    
-# Inherit from qcom-common
+
+# common msm8226
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)

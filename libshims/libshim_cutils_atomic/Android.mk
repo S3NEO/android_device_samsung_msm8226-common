@@ -1,5 +1,5 @@
-# Copyright (C) 2013 The Android Open Source Project
-# Copyright (C) 2013 The CyanogenMod Project
+#
+# Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,13 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := healthd_board_default.cpp
-LOCAL_MODULE := libhealthd.msm8226
-LOCAL_C_INCLUDES := system/core/healthd/include bootable/recovery/minui/include
-LOCAL_STATIC_LIBRARIES := libutils libbase libbinder
-include $(BUILD_STATIC_LIBRARY)
 
+LOCAL_MODULE := libshim_cutils_atomic
+LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_MODULE_TAGS := optional
+LOCAL_PROPRIETARY_MODULE := true
+
+LOCAL_SRC_FILES := \
+    atomic.c
+
+include $(BUILD_SHARED_LIBRARY)

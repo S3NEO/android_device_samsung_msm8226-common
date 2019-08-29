@@ -1,5 +1,5 @@
-# Copyright (C) 2014 The CyanogenMod Project
-# Copyright (C) 2017-2019 The LineageOS Project
+# Copyright (C) 2012 The CyanogenMod Project
+# Copyright (C) 2017-2018 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,31 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Inherit from qcom-common
+# inherit from qcom-common
 -include device/samsung/qcom-common/BoardConfigCommon.mk
 
-VENDOR_PATH := device/samsung/msm8226-common
-
-TARGET_SPECIFIC_HEADER_PATH := $(VENDOR_PATH)/include
-
-# Use Snapdragon LLVM if available on build server
-TARGET_USE_SDCLANG := true
+# Platform
+TARGET_BOARD_PLATFORM := msm8226
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno305
 
 # Architecture
-BOARD_USES_QCOM_HARDWARE := true
-TARGET_CPU_MEMCPY_BASE_OPT_DISABLE := true
 TARGET_CPU_VARIANT := krait
-BOARD_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
-BOARD_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
 # Audio
-AUDIO_FEATURE_ENABLED_COMPRESS_VOIP := true
-AUDIO_FEATURE_ENABLED_EXTN_FORMATS := true
-AUDIO_FEATURE_ENABLED_EXTN_POST_PROC := true
-AUDIO_FEATURE_ENABLED_FLUENCE := true
-AUDIO_FEATURE_ENABLED_FM_POWER_OPT := true
-AUDIO_FEATURE_ENABLED_HFP := true
-AUDIO_FEATURE_ENABLED_PROXY_DEVICE := true
 AUDIO_FEATURE_ENABLED_LOW_LATENCY_CAPTURE := true
 BOARD_USES_ALSA_AUDIO := true
 
@@ -46,30 +32,22 @@ TARGET_USES_64_BIT_BINDER := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_QCOM := true
-BLUETOOTH_HCI_USE_MCT := true
-
-# Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := MSM8226
 
 # Camera
-TARGET_PROVIDES_CAMERA_HAL := true
-USE_DEVICE_SPECIFIC_CAMERA := true
-TARGET_USE_COMPAT_GRALLOC_ALIGN := true
 TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 TARGET_NEEDS_LEGACY_CAMERA_HAL1_DYN_NATIVE_HANDLE := true
 TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Charger
-BOARD_CHARGING_MODE_BOOTING_LPM := "/sys/class/power_supply/battery/batt_lp_charging"
 BOARD_BATTERY_DEVICE_NAME := "battery"
 BOARD_CHARGING_CMDLINE_NAME := "androidboot.mode"
 BOARD_CHARGING_CMDLINE_VALUE := "charger"
-BOARD_CHARGER_DISABLE_INIT_BLANK := true
+BOARD_CHARGER_SHOW_PERCENTAGE := true
+BOARD_CHARGER_ENABLE_SUSPEND := true
 WITH_LINEAGE_CHARGER := false
 
-# Custom RIL class
-BOARD_RIL_CLASS := ../../../$(VENDOR_PATH)/ril
+# LineageHW
+BOARD_HARDWARE_CLASS += device/samsung/msm8226-common/lineagehw
 
 # Dexpreopt
 ifeq ($(HOST_OS),linux)
@@ -79,11 +57,14 @@ ifeq ($(HOST_OS),linux)
   endif
 endif
 
+WITH_DEXPREOPT_DEBUG_INFO := false
+USE_DEX2OAT_DEBUG := false
+DONT_DEXPREOPT_PREBUILTS := true
+
 # Display
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 OVERRIDE_RS_DRIVER := libRSDriver_adreno.so
 TARGET_USES_C2D_COMPOSITION := true
-TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x02000000U
 TARGET_USES_ION := true
 
 # Shader cache config options
@@ -96,18 +77,8 @@ MAX_EGL_CACHE_KEY_SIZE := 12*1024
 # of the device.
 MAX_EGL_CACHE_SIZE := 2048*1024
 
-# Extended Filesystem Support
-TARGET_KERNEL_HAVE_EXFAT := true
-
 # Filesystem
 TARGET_FS_CONFIG_GEN := device/samsung/msm8226-common/config.fs
-
-# Fonts
-EXTENDED_FONT_FOOTPRINT := true
-
-# Healthd
-BOARD_HAL_STATIC_LIBRARIES := libhealthd.msm8226
-BOARD_HEALTHD_CUSTOM_CHARGER_RES := device/samsung/msm8226-common/libhealthd/images
 
 # HIDL
 DEVICE_MANIFEST_FILE := device/samsung/msm8226-common/manifest.xml
@@ -116,47 +87,31 @@ DEVICE_MATRIX_FILE := device/samsung/msm8226-common/compatibility_matrix.xml
 # SELinux
 include device/samsung/msm8226-common/sepolicy/sepolicy.mk
 
+# Shims
+TARGET_LD_SHIM_LIBS += \
+    /system/lib/libcrypto.so|libboringssl-compat.so
+
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_msm
+TARGET_INIT_VENDOR_LIB := libinit_msm8226
+TARGET_RECOVERY_DEVICE_MODULES := libinit_msm8226
 
-# Legacy blobs support
-TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
-
-# LineageHW
-BOARD_HARDWARE_CLASS += device/samsung/msm8226-common/lineagehw
-
-# Memory
-MALLOC_SVELTE := true
-
-# Partitions and Vold
-BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
+# Partitions
 TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun%d/file
-
-# Platform
-TARGET_BOARD_PLATFORM := msm8226
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno305
-USE_CLANG_PLATFORM_BUILD := true
-
-# Properties (reset them here, include more in device if needed)
-TARGET_SYSTEM_PROP := $(VENDOR_PATH)/system.prop
+TARGET_USERIMAGES_USE_F2FS := true
+BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 
 # Power
 TARGET_HAS_LEGACY_POWER_STATS := true
 TARGET_HAS_NO_WIFI_STATS := true
 TARGET_USES_INTERACTION_BOOST := true
 
-# Shims
-TARGET_LD_SHIM_LIBS += \
-    /system/lib/libcrypto.so|libboringssl-compat.so
-
 # Time services
-BOARD_USES_QC_TIME_SERVICES := true 
+BOARD_USES_QC_TIME_SERVICES := true
 
 # Wifi
+BOARD_WLAN_DEVICE                := qcwcn
 BOARD_HAS_QCOM_WLAN              := true
 BOARD_HAS_QCOM_WLAN_SDK          := true
-BOARD_WLAN_DEVICE                := qcwcn
 BOARD_HOSTAPD_DRIVER             := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_WPA_SUPPLICANT_DRIVER      := NL80211

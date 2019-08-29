@@ -25,8 +25,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-# the DIAG device node is not world writable/readable.
-/dev/diag                 0660   system     oem_2950
+# the DIAG device node HAS TO BE world writable/readable, otherwise libdiag cant open the socket :/
+/dev/diag                 0777   system     oem_2950
 
 /dev/genlock              0666   system     system
 /dev/kgsl                 0666   system     system

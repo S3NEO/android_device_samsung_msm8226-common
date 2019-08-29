@@ -21,10 +21,6 @@
      for different hardware and product builds. -->
 <resources>
 
-    <!-- Should the pinner service pin the Camera application? -->
-    <bool name="config_pinnerCameraApp">true</bool>
-    <bool name="config_setColorTransformAccelerated">false</bool>
-    
     <!-- Values for GPS configuration -->
     <string-array translatable="false" name="config_gpsParameters">
         <item>XTRA_SERVER_1=https://xtrapath1.izatcloud.net/xtra3grc.bin</item>
@@ -37,26 +33,12 @@
         <item>LPP_PROFILE=0</item>
     </string-array>
 
-    <!-- Operating voltage for bluetooth controller. 0 by default-->
-    <integer translatable="false" name="config_bluetooth_operating_voltage_mv">3300</integer>    
-    
-    <!-- Integer indicating wpa_supplicant scan interval in milliseconds -->
-    <integer translatable="false" name="config_wifi_supplicant_scan_interval">40000</integer>
-
     <!-- Default list of files pinned by the Pinner Service -->
     <string-array translatable="false" name="config_defaultPinnerServiceFiles">
-        <item>"/system/framework/arm/boot-framework.oat"</item>
-        <item>"/system/framework/boot-framework.vdex"</item>
-        <item>"/system/framework/oat/arm/services.odex"</item>
-        <item>"/system/framework/oat/arm/services.vdex"</item>
-        <item>"/system/framework/arm/boot.oat"</item>
-        <item>"/system/framework/boot.vdex"</item>
-        <item>"/system/framework/arm/boot-core-libart.oat"</item>
-        <item>"/system/framework/boot-core-libart.vdex"</item>
         <item>"/system/priv-app/SystemUI/SystemUI.apk"</item>
-        <item>"/data/dalvik-cache/arm64/system@priv-app@SystemUI@SystemUI.apk@classes.dex"</item>
-        <item>"/data/dalvik-cache/arm64/system@priv-app@SystemUI@SystemUI.apk@classes.vdex"</item>
+        <item>"/data/dalvik-cache/arm/system@priv-app@SystemUI@SystemUI.apk@classes.dex"</item>
+        <item>"/data/dalvik-cache/arm/system@priv-app@SystemUI@SystemUI.apk@classes.vdex"</item>
         <item>"/system/lib/libsurfaceflinger.so"</item>
     </string-array>
-    
+
 </resources>

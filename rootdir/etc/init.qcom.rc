@@ -42,9 +42,9 @@ on early-init
     mkdir /efs 0771 system radio
 
     symlink /data/tombstones /tombstones
-    
+
     # Set permissions so radio can read
-    chmod 0444 /proc/cmdline    
+    chmod 0444 /proc/cmdline   
 
 on init
 
@@ -85,19 +85,7 @@ on post-fs-data
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
     chown system system /data/connectivity
-    
-    mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
 
-    # Create the directories used by the Wireless subsystem
-    mkdir /data/misc/wifi 0770 wifi wifi
-    chmod 0660 /data/misc/wifi/wpa_supplicant.conf
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/vendor/wifi 0770 wifi wifi
-    mkdir /data/vendor/wifi/wpa 0770 wifi wifi
-    mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
-    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
-    mkdir /data/misc/dhcp 0775 dhcp dhcp
-    
     # For WIFI TRP/TIS
     chown system root /data/.psm.info
     chmod 0664 /data/.psm.info
@@ -238,12 +226,12 @@ on post-fs-data
     rmdir /data/user_de/0/com.android.providers.telephony/shared_prefs
 
     setprop vold.post_fs_data_done 1
-    
+
     # Create perfd deamon related dirs
     mkdir /data/misc/perfd 0755 root system
     chmod 2755 /data/misc/perfd
     mkdir /data/system/perfd 0770 root system
-    chmod 2770 /data/system/perfd    
+    chmod 2770 /data/system/perfd  
 
 on early-boot
     # Set RLIMIT_MEMLOCK to 64MB
@@ -599,9 +587,8 @@ service adsprpcd /vendor/bin/adsprpcd
     user media
     group media
 
-service charger /sbin/healthd -c
+service charger /charger
     class charger
-    critical
     seclabel u:r:charger:s0
 
 service ds_fmc_appd /vendor/bin/ds_fmc_appd -p "rmnet0" -D
@@ -636,6 +623,7 @@ service mpdecision /vendor/bin/mpdecision --avg_comp
     class main
     user root
     group root readproc
+    disabled
 
 service qcamerasvr /vendor/bin/mm-qcamera-daemon
     class main
@@ -695,11 +683,11 @@ service wcnss-service /system/bin/wcnss_service
 # WPA
 service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf \
-    -I/vendor/etc/wifi/p2p_supplicant_overlay.conf -N \
+    -I/system/etc/wifi/p2p_supplicant_overlay.conf -N \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
-    -I/vendor/etc/wifi/wpa_supplicant_overlay.conf \
-    -O/data/vendor/wifi/wpa/sockets -puse_p2p_group_interface=1 \
-    -g@android:wpa_wlan0
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
+    -puse_p2p_group_interface=1 \
+    -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
     #   we will start as root and wpa_supplicant will switch to user wifi
     #   after setting up the capabilities required for WEXT
     #   user wifi
