@@ -55,7 +55,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.rild.nitz_short_ons_0="" \
     persist.rild.nitz_short_ons_1="" \
     persist.rild.nitz_short_ons_2="" \
-    persist.rild.nitz_short_ons_3=""
+    persist.rild.nitz_short_ons_3="" \
+    ril.subscription.types=NV,RUIM
 
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.timed.enable=true
