@@ -90,6 +90,12 @@ include device/samsung/msm8226-common/sepolicy/sepolicy.mk
 TARGET_INIT_VENDOR_LIB := libinit_msm8226
 TARGET_RECOVERY_DEVICE_MODULES := libinit_msm8226
 
+# Partitions
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
+
 # Netd
 TARGET_NEEDS_NETD_DIRECT_CONNECT_RULE := true
 
