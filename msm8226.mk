@@ -15,8 +15,8 @@
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
-    device/samsung/msm8974-common/overlay \
-    device/samsung/msm8974-common/overlay-lineage
+    device/samsung/msm8226-common/overlay \
+    device/samsung/msm8226-common/overlay-lineage
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -68,9 +68,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
     android.hardware.audio.effect@2.0-impl \
-    audio_policy.msm8974 \
+    audio_policy.msm8226 \
     audio.a2dp.default \
-    audio.primary.msm8974 \
+    audio.primary.msm8226 \
     audio.r_submix.default \
     audio.usb.default \
     libaudio-resampler \
@@ -94,16 +94,16 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.memtrack@1.0-impl \
-    copybit.msm8974 \
-    gralloc.msm8974 \
-    hwcomposer.msm8974 \
-    memtrack.msm8974
+    copybit.msm8226 \
+    gralloc.msm8226 \
+    hwcomposer.msm8226 \
+    memtrack.msm8226
 
 # Camera
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     camera.device@1.0-impl \
-    camera.msm8974 \
+    camera.msm8226 \
     libxml2 \
     Snap
 
@@ -118,7 +118,7 @@ PRODUCT_PACKAGES += \
 # GPS
 PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-impl \
-    gps.msm8974
+    gps.msm8226
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/flp.conf:system/etc/flp.conf \
@@ -129,13 +129,13 @@ PRODUCT_COPY_FILES += \
 # IR Blaster
 PRODUCT_PACKAGES += \
     android.hardware.ir@1.0-impl \
-    consumerir.msm8974
+    consumerir.msm8226
 
 # Keylayouts
 PRODUCT_COPY_FILES += \
-    device/samsung/msm8974-common/keylayout/cyttsp-i2c.kl:system/usr/keylayout/cyttsp-i2c.kl \
-    device/samsung/msm8974-common/keylayout/keypad_8960.kl:system/usr/keylayout/keypad_8960.kl \
-    device/samsung/msm8974-common/keylayout/Vendor_04e8_Product_7021.kl:system/usr/keylayout/Vendor_04e8_Product_7021.kl
+    device/samsung/msm8226-common/keylayout/cyttsp-i2c.kl:system/usr/keylayout/cyttsp-i2c.kl \
+    device/samsung/msm8226-common/keylayout/keypad_8960.kl:system/usr/keylayout/keypad_8960.kl \
+    device/samsung/msm8226-common/keylayout/Vendor_04e8_Product_7021.kl:system/usr/keylayout/Vendor_04e8_Product_7021.kl
 
 # Keymaster
 PRODUCT_PACKAGES += \
@@ -150,7 +150,7 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml  \
-    device/samsung/msm8974-common/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml
+    device/samsung/msm8226-common/configs/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml
 
 # OMX
 PRODUCT_PACKAGES += \
@@ -179,8 +179,8 @@ PRODUCT_COPY_FILES += \
 
 # Sensors
 PRODUCT_PACKAGES += \
-    android.hardware.sensors@1.0-impl.samsung8974 \
-    android.hardware.sensors@1.0-service.samsung8974
+    android.hardware.sensors@1.0-impl.samsung8226 \
+    android.hardware.sensors@1.0-service.samsung8226
 
 # Touch features
 PRODUCT_PACKAGES += \
@@ -203,7 +203,7 @@ PRODUCT_PACKAGES += \
     wpa_supplicant.conf
 
 # Get non-open-source specific aspects
-$(call inherit-product-if-exists, vendor/samsung/msm8974-common/msm8974-common-vendor.mk)
+$(call inherit-product-if-exists, vendor/samsung/msm8226-common/msm8226-common-vendor.mk)
 
-# common msm8974
+# common msm8226
 $(call inherit-product, device/samsung/qcom-common/qcom-common.mk)
