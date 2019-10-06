@@ -18,7 +18,7 @@
 
 # Platform
 TARGET_BOARD_PLATFORM := msm8226
-TARGET_BOARD_PLATFORM_GPU := qcom-adreno330
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno305
 
 # Architecture
 TARGET_CPU_VARIANT := krait
