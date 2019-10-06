@@ -47,9 +47,8 @@ TARGET_USES_NON_TREBLE_CAMERA := true
 
 # Charger
 BOARD_BATTERY_DEVICE_NAME := "battery"
-BOARD_CHARGING_CMDLINE_NAME := "androidboot.bootchg"
-BOARD_CHARGING_CMDLINE_VALUE := "true"
-WITH_LINEAGE_CHARGER := false
+BOARD_CHARGING_CMDLINE_NAME := "androidboot.mode"
+BOARD_CHARGING_CMDLINE_VALUE := "charger"
 
 # Dexpreopt
 ifeq ($(HOST_OS),linux)
