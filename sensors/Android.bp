@@ -1,5 +1,5 @@
 cc_library_static {
-    name: "multihal-samsung8974",
+    name: "multihal-samsung8226",
     vendor: true,
     srcs: [
         "multihal.cpp",
@@ -22,7 +22,7 @@ cc_library_static {
 }
 
 cc_library_shared {
-    name: "android.hardware.sensors@1.0-impl.samsung8974",
+    name: "android.hardware.sensors@1.0-impl.samsung8226",
     defaults: ["hidl_defaults"],
     proprietary: true,
     relative_install_path: "hw",
@@ -39,17 +39,17 @@ cc_library_shared {
     ],
     static_libs: [
         "android.hardware.sensors@1.0-convert",
-        "multihal-samsung8974",
+        "multihal-samsung8226",
     ],
     local_include_dirs: ["include/sensors"],
 }
 
 cc_binary {
-    name: "android.hardware.sensors@1.0-service.samsung8974",
+    name: "android.hardware.sensors@1.0-service.samsung8226",
     defaults: ["hidl_defaults"],
     relative_install_path: "hw",
     vendor: true,
-    init_rc: ["android.hardware.sensors@1.0-service.samsung8974.rc"],
+    init_rc: ["android.hardware.sensors@1.0-service.samsung8226.rc"],
     srcs: ["service.cpp"],
 
     shared_libs: [
