@@ -199,6 +199,19 @@ PRODUCT_PACKAGES += \
 # Power HAL
 PRODUCT_PACKAGES += \
     android.hardware.power@1.1-service-qti
+    
+
+# Ramdisk
+PRODUCT_PACKAGES += \
+    init.qcom.bt.sh \
+    init.ril.sh
+
+PRODUCT_PACKAGES += \
+    init.qcom.power.rc \
+    init.qcom.rc \
+    init.qcom.usb.rc \
+    init.recovery.qcom.rc \
+    ueventd.qcom.rc
 
 # RenderScript HAL
 PRODUCT_PACKAGES += \
