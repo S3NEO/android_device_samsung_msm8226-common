@@ -44,7 +44,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     audio.offload.buffer.size.kb=32 \
     audio.offload.gapless.enabled=false \
-    av.offload.enable=true
+    av.offload.enable=true\
+    ro.af.client_heap_size_kbyte=7168 \
+    ro.audio.flinger_standbytime_ms=300
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.opengles.version=196608
