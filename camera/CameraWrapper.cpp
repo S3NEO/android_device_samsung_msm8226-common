@@ -27,6 +27,7 @@
 #define LOG_TAG "CameraWrapper"
 #include <cutils/log.h>
 
+#include <android-base/properties.h>
 #include <utils/threads.h>
 #include <utils/String8.h>
 #include <hardware/hardware.h>
@@ -41,6 +42,18 @@
 #define OPEN_RETRY_MSEC 40
 
 using namespace android;
+using android::base::GetProperty;
+
+enum {
+    UNKNOWN = -1,
+    S3VE3G,
+    KMINI3G,
+    MS01,
+    MATISSE,
+    MILLET,
+};
+
+static int product_device = UNKNOWN;
 
 const char KEY_SUPPORTED_ISO_MODES[] = "iso-values";
 const char KEY_SAMSUNG_CAMERA_MODE[] = "cam_mode";
@@ -94,6 +107,41 @@ camera_module_t HAL_MODULE_INFO_SYM = {
     .init = NULL,               /* remove compilation warnings */
     .reserved = {0},            /* remove compilation warnings */
 };
+
+static int get_product_device()
+{
+    if (product_device != UNKNOWN)
+        return product_device;
+
+    std::string device = GetProperty("ro.product.device", "");
+
+    if (device == "s3ve3gxx")
+        product_device = S3VE3G;
+    else if (device == "s3ve3gjv")
+        product_device = S3VE3G;
+    else if (device == "kmini3g")
+        product_device = KMINI3G;
+    else if (device == "ms013g")
+        product_device = MS01;
+    else if (device == "ms013lte")
+        product_device = MS01;
+    else if (device == "matissewifi")
+        product_device = MATISSE;
+    else if (device == "matisse3g")
+        product_device = MATISSE;
+    else if (device == "matisselte")
+        product_device = MATISSE;
+    else if (device == "milletwifi")
+        product_device = MILLET;
+    else if (device == "millet3g")
+        product_device = MILLET;
+    else if (device == "milletlte")
+        product_device = MILLET;
+    else
+        product_device = UNKNOWN;
+
+    return product_device;
+}
 
 typedef struct wrapper_camera_device {
     camera_device_t base;
@@ -183,7 +231,7 @@ static char* camera_fixup_getparams(int id, const char* settings) {
         params.set(KEY_VIDEO_HFR_VALUES, hfrModes);
     }
         
-    if (id == BACK_CAMERA_ID) {
+    if (id == BACK_CAMERA_ID || get_product_device() == S3VE3G) {
         params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
         params.set(KEY_SUPPORTED_HFR_SIZES, "1280x720,720x480");
         params.set(KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, "60,off");
