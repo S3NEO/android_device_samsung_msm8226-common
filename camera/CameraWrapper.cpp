@@ -236,6 +236,12 @@ static char* camera_fixup_getparams(int id, const char* settings) {
         params.set(KEY_SUPPORTED_HFR_SIZES, "1280x720,720x480");
         params.set(KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, "60,off");
     }
+
+    if ( get_product_device() == MATISSE) {
+    params.set(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP, "0.5");
+    params.set(CameraParameters::KEY_MIN_EXPOSURE_COMPENSATION, "-4");
+    params.set(CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION, "4");
+    }
         
 #if !LOG_NDEBUG
     ALOGV("%s: fixed parameters:", __FUNCTION__);
