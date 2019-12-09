@@ -91,7 +91,7 @@ DEVICE_MATRIX_FILE := device/samsung/msm8226-common/compatibility_matrix.xml
 TARGET_KEYMASTER_SKIP_WAITING_FOR_QSEE := true
 
 # SELinux
-include device/samsung/msm8226-common/sepolicy/sepolicy.mk
+#include device/samsung/msm8226-common/sepolicy/sepolicy.mk
 
 # Optimize
 PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
