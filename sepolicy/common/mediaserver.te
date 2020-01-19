@@ -1,3 +1,8 @@
+allow mediaserver cameraproxy_service:service_manager find;
+allow mediaserver device:dir read;
+allow mediaserver hal_camera_default:binder { call transfer };
+allow mediaserver hal_camera_hwservice:hwservice_manager find;
+allow mediaserver sensor_privacy_service:service_manager find;
 allow mediaserver sysfs_camera:dir search;
 allow mediaserver sysfs_camera:file r_file_perms;
 allow mediaserver vendor_file:file execmod;

@@ -1,4 +1,5 @@
 type proc_bt_sleep, fs_type, proc_type;
+type proc_last_kmsg, fs_type, proc_type;
 
 type sysfs_camera, fs_type, sysfs_type;
 type sysfs_disk_stat, fs_type, sysfs_type;
