@@ -2,6 +2,8 @@ allow vold efs_file:dir rw_dir_perms;
 allow vold efs_file:file create;
 allow vold persist_data_file:dir { open read };
 
+allow vold hal_bootctl_hwservice:hwservice_manager find;
+
 allow vold {
     block_device
     cache_block_device
