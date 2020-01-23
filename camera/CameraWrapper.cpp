@@ -42,7 +42,7 @@
 #define OPEN_RETRY_MSEC 40
 
 using namespace android;
-using android::base::GetProperty;
+using base::GetProperty;
 
 enum {
     UNKNOWN = -1,
@@ -59,10 +59,16 @@ const char KEY_SUPPORTED_ISO_MODES[] = "iso-values";
 const char KEY_SAMSUNG_CAMERA_MODE[] = "cam_mode";
 const char KEY_ISO_MODE[] = "iso";
 const char KEY_ZSL[] = "zsl";
+const char KEY_SUPPORTED_ZSL_MODES[] = "zsl-values";
+const char KEY_ZSL_OFF[]  = "off";
+const char KEY_ZSL_ON[] = "on";
+const char KEY_DIS[] = "dis";
+const char KEY_DIS_DISABLE[] = "disable";
 const char KEY_CAMERA_MODE[] = "camera-mode";
 const char KEY_SUPPORTED_HFR_SIZES[] = "hfr-size-values";
 const char KEY_SUPPORTED_MEM_COLOR_ENHANCE_MODES[] = "mce-values";
 const char KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES[] = "video-hfr-values";
+
 
 static Mutex gCameraWrapperLock;
 static camera_module_t* gVendorModule = 0;
@@ -206,6 +212,8 @@ const static char* iso_values[] = {
 #endif
 };
 
+const static char * exposure_values[] = {"5","5"};
+
 static char* camera_fixup_getparams(int id, const char* settings) {
     CameraParameters params;
     params.unflatten(String8(settings));
@@ -251,7 +259,7 @@ static char* camera_fixup_getparams(int id, const char* settings) {
 		}
 	}
     if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
-        params.set(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP, "0.5");
+        params.set(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP, exposure_values[id]);
         params.set(CameraParameters::KEY_MIN_EXPOSURE_COMPENSATION, "-4");
         params.set(CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION, "4");
         params.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES, "640x360,640x480,352x288,320x240,176x144");
@@ -279,6 +287,14 @@ static char* camera_fixup_setparams(struct camera_device* device, const char* se
     const char* recordingHint = params.get(CameraParameters::KEY_RECORDING_HINT);
     bool isVideo = false;
     if (recordingHint) isVideo = !strcmp(recordingHint, "true");
+	if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
+        if (isVideo) {
+            params.set(KEY_DIS, KEY_DIS_DISABLE);
+            params.set(KEY_ZSL, KEY_ZSL_OFF);
+        } else {
+            params.set(KEY_ZSL, KEY_ZSL_ON);
+        }
+	}
 
 #if !LOG_NDEBUG
     ALOGV("%s: original parameters:", __FUNCTION__);
