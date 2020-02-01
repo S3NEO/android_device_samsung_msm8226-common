@@ -61,3 +61,5 @@ allow init sysfs_devfreq:file setattr;
 allow init efs_file:dir mounton;
 allow init init:capability2 block_suspend;
 allow init system_file:file mounton;
+allow init sysfs_leds:lnk_file read;
+
