@@ -18,3 +18,4 @@ allow system_server {
 allow system_server init:binder call;
 allow system_server unlabeled:file unlink;
 allow system_server proc:file { getattr open read };
+allow system_server crash_dump:process getpgid;
