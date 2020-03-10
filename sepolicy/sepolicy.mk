@@ -15,5 +15,6 @@
 #
 
 include device/qcom/sepolicy-legacy/sepolicy.mk
+
 BOARD_SEPOLICY_DIRS += \
     device/samsung/msm8226-common/sepolicy/common

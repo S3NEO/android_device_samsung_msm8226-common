@@ -1,1 +1,2 @@
 service.camera.hdmi_preview                      u:object_r:camera_prop:s0
+wifi.active.interface                            u:object_r:exported_wifi_prop:s0
