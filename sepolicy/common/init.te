@@ -8,6 +8,7 @@ allow init {
     sysfs_iio
     sysfs_sec_tsp
     sysfs_sensors
+    firmware_file
 }:lnk_file read;
 
 allow init {
@@ -38,6 +39,7 @@ allow init {
     sysfs_socinfo
     sysfs_usb_otg
     sysfs_wifi_writeable
+    firmware_file
 }:file setattr;
 
 allow init {
@@ -50,6 +52,7 @@ allow init {
     sysfs_net
     sysfs_sec_key
     sysfs_thermal
+    firmware_file
 }:file w_file_perms;
 
 allow init {
@@ -61,5 +64,7 @@ allow init sysfs_devfreq:file setattr;
 allow init efs_file:dir mounton;
 allow init init:capability2 block_suspend;
 allow init system_file:file mounton;
+allow init init:firmware_file mounton;
+allow init init:firmware_file read;
 allow init sysfs_leds:lnk_file read;
 
