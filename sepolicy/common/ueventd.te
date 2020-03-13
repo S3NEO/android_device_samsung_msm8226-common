@@ -7,3 +7,8 @@ allow ueventd exfat:file open;
 allow ueventd exfat:file getattr;
 
 allow ueventd proc:file { read };
+
+allow ueventd unlabeled:dir search;
+allow ueventd unlabeled:file read;
+allow ueventd unlabeled:file open;
+allow ueventd unlabeled:file getattr;

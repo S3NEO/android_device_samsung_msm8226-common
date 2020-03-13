@@ -5,3 +5,5 @@ allow priv_app proc_interrupts:file r_file_perms;
 allow priv_app proc_modules:file open;
 allow priv_app sysfs:file { open read };
 allow priv_app proc_modules:file getattr;
+allow priv_app unlabeled:filesystem getattr;
+allow priv_app unlabeled:dir search;

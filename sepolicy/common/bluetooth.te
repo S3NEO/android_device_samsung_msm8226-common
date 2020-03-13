@@ -10,6 +10,8 @@ allow bluetooth_loader bluetooth_efs_file:file { open read };
 allow bluetooth_loader efs_file:dir search;
 allow bluetooth_loader bluetooth_efs_file:file getattr;
 
+allow bluetooth unlabeled:dir search;
+
 allow bluetooth {
     bt_fw_file
     wifi_data_file

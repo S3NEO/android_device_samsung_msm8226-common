@@ -1,0 +1,2 @@
+allow gpuservice opengles_prop:file read;
+allow gpuservice opengles_prop:file open;

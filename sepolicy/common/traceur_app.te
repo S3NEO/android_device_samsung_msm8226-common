@@ -1,0 +1,1 @@
+allow traceur_app unlabeled:dir search;

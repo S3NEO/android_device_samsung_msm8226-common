@@ -1,3 +1,7 @@
 allow zygote proc_cmdline:file read; 
 allow zygote proc_cmdline:file open;
 allow zygote proc_cmdline:file getattr;
+allow zygote unlabeled:dir getattr;
+allow zygote unlabeled:dir read;
+allow zygote unlabeled:dir open;
+allow zygote unlabeled:dir search;
