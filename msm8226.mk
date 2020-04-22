@@ -273,10 +273,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.lmk.medium=700 \
     dalvik.vm.madvise-random=true \
     dalvik.vm.heapgrowthlimit=192m \
-	dalvik.vm.heapsize=256m
+    dalvik.vm.heapsize=256m
 
 # include Android Go product Makefile
-$(call inherit-product, build/target/product/go_defaults.mk)
+$(call inherit-product, build/target/product/go_defaults_512.mk)
 
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/samsung/msm8226-common/msm8226-common-vendor.mk)
