@@ -268,15 +268,35 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/prima/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/prima/WCNSS_qcom_wlan_nv.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
 
-# Optimizations
+# Optimizations; do not use Go defaults because of heap size
+PRODUCT_SYSTEM_SERVER_COMPILER_FILTER := speed-profile
+PRODUCT_ALWAYS_PREOPT_EXTRACTED_APK := true
+PRODUCT_USE_PROFILE_FOR_BOOT_IMAGE := true
+PRODUCT_DEX_PREOPT_BOOT_IMAGE_PROFILE_LOCATION := frameworks/base/config/boot-image-profile.txt
+PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
+PRODUCT_PACKAGES += InProcessNetworkStack
+PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+ifneq (,$(filter eng, $(TARGET_BUILD_VARIANT)))
+  PRODUCT_DISABLE_SCUDO := true
+endif
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/go_handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.lmk.medium=700 \
     dalvik.vm.madvise-random=true \
     dalvik.vm.heapgrowthlimit=192m \
-    dalvik.vm.heapsize=256m
-
-# include Android Go product Makefile
-$(call inherit-product, build/target/product/go_defaults_512.mk)
+    dalvik.vm.heapsize=384m \
+    ro.config.low_ram=true \
+    persist.traced.enable=1
+    ro.lmk.critical_upgrade=true \
+    ro.lmk.upgrade_pressure=40 \
+    ro.lmk.downgrade_pressure=60 \
+    ro.lmk.kill_heaviest_task=false \
+    ro.statsd.enable=true \
+    pm.dexopt.downgrade_after_inactive_days=10 \
+    pm.dexopt.shared=quicken
 
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/samsung/msm8226-common/msm8226-common-vendor.mk)
