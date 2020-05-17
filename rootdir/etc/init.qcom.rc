@@ -585,7 +585,7 @@ service adsprpcd /vendor/bin/adsprpcd
     user media
     group media
 
-service charger /system/bin/charger
+service charger /system/system/bin/charger
     class charger
     user system
     group system graphics input
