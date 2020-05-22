@@ -31,16 +31,42 @@
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-
 #include "property_service.h"
 
 #include "init_msm8226.h"
 
 using android::init::property_set;
 
-__attribute__ ((weak))
-void init_target_properties()
+void cdma_properties(char const operator_alpha[],
+        char const operator_numeric[],
+        char const default_cdma_sub[],
+        char const default_network[])
 {
+    // Dynamic CDMA Properties
+    property_set("ro.cdma.home.operator.alpha", operator_alpha);
+    property_set("ro.cdma.home.operator.numeric", operator_numeric);
+    property_set("ro.telephony.default_cdma_sub", default_cdma_sub);
+    property_set("ro.telephony.default_network", default_network);
+
+    // Static CDMA Properties
+    property_set("ril.subscription.types", "NV,RUIM");
+    property_set("telephony.lteOnCdmaDevice", "1");
+}
+
+void gsm_properties(const char default_network[],
+        char const lteOnGsmDevice[])
+{
+    // Dynamic GSM Properties
+    property_set("ro.telephony.default_network", default_network);
+    property_set("telephony.lteOnGsmDevice", lteOnGsmDevice);
+}
+
+void wifi_properties(char const carrier[],
+        char const noril[])
+{
+    // Dynamic Wi-Fi Properties
+    property_set("ro.carrier", carrier);
+    property_set("ro.radio.noril", noril);
 }
 
 void property_override(char const prop[], char const value[])
@@ -59,10 +85,4 @@ void property_override_dual(char const system_prop[],
 {
     property_override(system_prop, value);
     property_override(vendor_prop, value);
-}
-
-
-void vendor_load_properties()
-{
-    init_target_properties();
 }
