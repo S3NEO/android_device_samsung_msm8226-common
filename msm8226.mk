@@ -280,21 +280,9 @@ ifneq (,$(filter eng, $(TARGET_BUILD_VARIANT)))
   PRODUCT_DISABLE_SCUDO := true
 endif
 
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/go_handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
-
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.lmk.medium=700 \
-    dalvik.vm.madvise-random=true \
-    dalvik.vm.heapgrowthlimit=192m \
-    dalvik.vm.heapsize=256m \
-    ro.config.low_ram=true \
-    persist.traced.enable=1
-    ro.lmk.critical_upgrade=true \
-    ro.lmk.upgrade_pressure=40 \
-    ro.lmk.downgrade_pressure=60 \
-    ro.lmk.kill_heaviest_task=false \
-    ro.statsd.enable=true \
+    dalvik.vm.heapgrowthlimit=256m \
+    dalvik.vm.heapsize=376m \
     pm.dexopt.downgrade_after_inactive_days=10 \
     pm.dexopt.shared=quicken
 
