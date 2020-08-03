@@ -212,7 +212,7 @@ const static char* iso_values[] = {
 #endif
 };
 
-const static char * exposure_values[] = {"5","5"};
+const static char * exposure_values[] = {"1","9"};
 
 static char* camera_fixup_getparams(int id, const char* settings) {
     CameraParameters params;
