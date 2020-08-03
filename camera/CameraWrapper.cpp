@@ -244,10 +244,12 @@ static char* camera_fixup_getparams(int id, const char* settings) {
         params.set(KEY_VIDEO_HFR_VALUES, "off");
     }
 
-    if (id == BACK_CAMERA_ID || get_product_device() == S3VE3G || get_product_device() == MS01 || get_product_device() == KMINI3G) {
-        params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
-        params.set(KEY_SUPPORTED_HFR_SIZES, "1280x720,720x480");
-        params.set(KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, "60,off");
+    if (id == BACK_CAMERA_ID) {
+        if (get_product_device() == S3VE3G || get_product_device() == MS01 || get_product_device() == KMINI3G) {
+            params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
+            params.set(KEY_SUPPORTED_HFR_SIZES, "1280x720,720x480");
+            params.set(KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, "60,off");
+        }
     }
 
     if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
