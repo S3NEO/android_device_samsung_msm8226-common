@@ -59,11 +59,7 @@ const char KEY_SUPPORTED_ISO_MODES[] = "iso-values";
 const char KEY_SAMSUNG_CAMERA_MODE[] = "cam_mode";
 const char KEY_ISO_MODE[] = "iso";
 const char KEY_ZSL[] = "zsl";
-const char KEY_SUPPORTED_ZSL_MODES[] = "zsl-values";
-const char KEY_ZSL_OFF[]  = "off";
-const char KEY_ZSL_ON[] = "on";
-const char KEY_DIS[] = "dis";
-const char KEY_DIS_DISABLE[] = "disable";
+static const char OFF[] = "off";
 const char KEY_CAMERA_MODE[] = "camera-mode";
 const char KEY_SUPPORTED_HFR_SIZES[] = "hfr-size-values";
 const char KEY_SUPPORTED_MEM_COLOR_ENHANCE_MODES[] = "mce-values";
@@ -133,11 +129,17 @@ static int get_product_device()
         product_device = MS01;
     else if (device == "matissewifi")
         product_device = MATISSE;
+    else if (device == "matissewifiue")
+        product_device = MATISSE;
     else if (device == "matisse3g")
+        product_device = MATISSE;
+    else if (device == "matisse3gjv")
         product_device = MATISSE;
     else if (device == "matisselte")
         product_device = MATISSE;
     else if (device == "milletwifi")
+        product_device = MILLET;
+    else if (device == "milletwifiue")
         product_device = MILLET;
     else if (device == "millet3g")
         product_device = MILLET;
@@ -229,47 +231,34 @@ static char* camera_fixup_getparams(int id, const char* settings) {
         params.set(CameraParameters::KEY_SUPPORTED_SCENE_MODES,
                        "auto,asd,action,portrait,landscape,night,night-portrait,theatre,beach,snow,sunset,"
                        "steadyphoto,fireworks,sports,party,candlelight,backlight,flowers,AR");
+        /* If the vendor has HFR values but doesn't also expose that
+         * this can be turned off, fixup the params to tell the Camera
+         * that it really is okay to turn it off.
+         */
+        const char *hfrModeValues = params.get(KEY_VIDEO_HFR_VALUES);
+        if (hfrModeValues && !strstr(hfrModeValues, "off")) {
+            char hfrModes[strlen(hfrModeValues) + 4 + 1];
+            sprintf(hfrModes, "%s,off", hfrModeValues);
+            params.set(KEY_VIDEO_HFR_VALUES, hfrModes);
+        }
+        if (id == BACK_CAMERA_ID) {
+            params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
+            params.set(KEY_SUPPORTED_HFR_SIZES, "1280x720,720x480");
+            params.set(KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, "60,off");
+        }
     }
 
     if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
         params.set(CameraParameters::KEY_PREFERRED_PREVIEW_SIZE_FOR_VIDEO, "640x480" );
-    }
-
-    /* If the vendor has HFR values but doesn't also expose that
-     * this can be turned off, fixup the params to tell the Camera
-     * that it really is okay to turn it off.
-     */
-    if (get_product_device() == S3VE3G || get_product_device() == MS01 || get_product_device() == KMINI3G) {
-	    const char *hfrModeValues = params.get(KEY_VIDEO_HFR_VALUES);
-	    if (hfrModeValues && !strstr(hfrModeValues, "off")) {
-		char hfrModes[strlen(hfrModeValues) + 4 + 1];
-		sprintf(hfrModes, "%s,off", hfrModeValues);
-		params.set(KEY_VIDEO_HFR_VALUES, hfrModes);
-	    }
-    }
-        
-    if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
+        params.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES, "640x360,640x480,352x288,320x240,176x144");
         params.set(KEY_VIDEO_HFR_VALUES, "off");
     }
-	if (id == BACK_CAMERA_ID) {
-		if (get_product_device() == S3VE3G || get_product_device() == MS01 || get_product_device() == KMINI3G) {
-			params.set(CameraParameters::KEY_SUPPORTED_FLASH_MODES, "auto,on,off,torch");
-			params.set(KEY_SUPPORTED_HFR_SIZES, "1280x720,720x480");
-			params.set(KEY_SUPPORTED_VIDEO_HIGH_FRAME_RATE_MODES, "60,off");
-		}
-	}
-    if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
-        params.set(CameraParameters::KEY_EXPOSURE_COMPENSATION_STEP, exposure_values[id]);
-        params.set(CameraParameters::KEY_MIN_EXPOSURE_COMPENSATION, "-4");
-        params.set(CameraParameters::KEY_MAX_EXPOSURE_COMPENSATION, "4");
-        params.set(CameraParameters::KEY_SUPPORTED_PREVIEW_SIZES, "640x360,640x480,352x288,320x240,176x144");
-    }
-        
+
 #if !LOG_NDEBUG
     ALOGV("%s: fixed parameters:", __FUNCTION__);
     params.dump();
 #endif
-    
+
     String8 strParams = params.flatten();
     char* ret = strdup(strParams.string());
 
@@ -287,14 +276,6 @@ static char* camera_fixup_setparams(struct camera_device* device, const char* se
     const char* recordingHint = params.get(CameraParameters::KEY_RECORDING_HINT);
     bool isVideo = false;
     if (recordingHint) isVideo = !strcmp(recordingHint, "true");
-	if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
-        if (isVideo) {
-            params.set(KEY_DIS, KEY_DIS_DISABLE);
-            params.set(KEY_ZSL, KEY_ZSL_OFF);
-        } else {
-            params.set(KEY_ZSL, KEY_ZSL_ON);
-        }
-	}
 
 #if !LOG_NDEBUG
     ALOGV("%s: original parameters:", __FUNCTION__);
@@ -320,6 +301,10 @@ static char* camera_fixup_setparams(struct camera_device* device, const char* se
     if (id != 1) {
         params.set(KEY_ZSL, isVideo ? "off" : "on");
         params.set(KEY_CAMERA_MODE, isVideo ? "0" : "1");
+    }
+
+    if (( get_product_device() == MATISSE) || ( get_product_device() == MILLET)) {
+        params.set(KEY_ZSL, OFF);
     }
 
 #if !LOG_NDEBUG
